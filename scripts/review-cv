@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  scripts/review-cv "Candidate Name" /path/to/cv.pdf --roles "Role A, Role B" [--projects /path/to/projects-list.md] [--date YYYY-MM-DD]
+
+Example:
+  scripts/review-cv "Budi Santoso" ~/Downloads/CV_Budi.pdf --roles "Data Analyst, Application Support" --projects ~/Downloads/projects-list.md
+
+This initializes:
+  output/candidates/<candidate-slug>/<run-id>/
+
+Then paste the printed prompt back to Codex/agent to run the full cv-brainstormer workflow.
+USAGE
+}
+
+slugify() {
+  printf '%s' "$1" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/-+/-/g'
+}
+
+candidate_name=""
+cv_file=""
+roles=""
+projects_file=""
+run_date="$(date +%F)"
+
+if [[ $# -eq 1 && ( "$1" == "-h" || "$1" == "--help" ) ]]; then
+  usage
+  exit 0
+fi
+
+if [[ $# -lt 2 ]]; then
+  usage
+  exit 2
+fi
+
+candidate_name="$1"
+cv_file="$2"
+shift 2
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --roles)
+      roles="${2:-}"
+      shift 2
+      ;;
+    --projects)
+      projects_file="${2:-}"
+      shift 2
+      ;;
+    --date)
+      run_date="${2:-}"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "unknown argument: $1" >&2
+      usage
+      exit 2
+      ;;
+  esac
+done
+
+if [[ -z "$roles" ]]; then
+  echo "--roles is required" >&2
+  exit 2
+fi
+
+if [[ ! -f "$cv_file" ]]; then
+  echo "CV file not found: $cv_file" >&2
+  exit 1
+fi
+
+if [[ -n "$projects_file" && ! -f "$projects_file" ]]; then
+  echo "projects file not found: $projects_file" >&2
+  exit 1
+fi
+
+candidate_slug="$(slugify "$candidate_name")"
+target_slug="$(slugify "$roles")"
+run_id="${run_date}-${target_slug}"
+run_dir="output/candidates/${candidate_slug}/${run_id}"
+
+mkdir -p "${run_dir}/input" "${run_dir}/scratch" "${run_dir}/reports" "${run_dir}/cv" "${run_dir}/portfolio"
+
+cv_ext="${cv_file##*.}"
+cp "$cv_file" "${run_dir}/input/original-cv.${cv_ext}"
+
+if [[ -n "$projects_file" ]]; then
+  cp "$projects_file" "${run_dir}/input/projects-list.md"
+fi
+
+cat > "${run_dir}/input/target-brief.md" <<EOF_BRIEF
+# Target Brief
+
+Candidate: ${candidate_name}
+
+Run ID: \`${run_id}\`
+
+Target roles:
+
+$(printf '%s' "$roles" | tr ',' '\n' | sed -E 's/^ */- /; s/ *$//')
+
+Output strategy:
+
+- Use the full cv-brainstormer workflow.
+- Create role-specific CV variants.
+- Create English and Indonesian CV variants unless the target decision gate says otherwise.
+- Keep all outputs inside this run folder.
+
+Run folder:
+
+\`${run_dir}\`
+EOF_BRIEF
+
+cat > "output/candidates/${candidate_slug}/LATEST.md" <<EOF_LATEST
+# Latest Run
+
+Current latest run:
+
+\`${run_id}\`
+
+Run folder:
+
+\`${run_dir}\`
+EOF_LATEST
+
+cat <<EOF_DONE
+Initialized CV review run:
+  ${run_dir}
+
+Input files:
+  ${run_dir}/input/original-cv.${cv_ext}
+  ${run_dir}/input/target-brief.md
+EOF_DONE
+
+if [[ -n "$projects_file" ]]; then
+  echo "  ${run_dir}/input/projects-list.md"
+fi
+
+cat <<EOF_PROMPT
+
+Paste this prompt to start the agent workflow:
+
+Gunakan skill cv-brainstormer untuk review CV kandidat:
+${run_dir}/input/original-cv.${cv_ext}
+
+Target brief:
+${run_dir}/input/target-brief.md
+EOF_PROMPT
+
+if [[ -n "$projects_file" ]]; then
+  echo "Project list:"
+  echo "${run_dir}/input/projects-list.md"
+fi
+
+cat <<EOF_PROMPT_END
+
+Ikuti workflow lengkap:
+Agent 00, Agent 00.25 Role Discovery Interviewer, Agent 00.5 Target Decision Gate, Agents 01-06, Agent 04.5 Evidence Gate, Agent 05.5 Adjacent Role Strategist, Agent 07 Synthesizer, Agent 08 Role Tailor, Agent 08.5 Portfolio Mapper, dan Agent 09 Final Verifier.
+
+Output wajib masuk ke:
+${run_dir}
+EOF_PROMPT_END

@@ -1,0 +1,9 @@
+output/
+input/
+.codex/
+.git.broken-readonly/
+.agents/skills/brainstorming/
+*.pdf
+*.docx
+__pycache__/
+.DS_Store
