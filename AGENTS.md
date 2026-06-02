@@ -61,6 +61,7 @@ Current example run:
 
 - Agents must not simply agree with user framing. They should challenge unclear targets, unsupported claims, missing context, and weak evidence.
 - When official title and real work conflict, agents must use Agent 00.25 output as the source of truth for role family and level.
+- If QA/testing work exists, agents must distinguish Manual QA / Application Support QA from Automation QA and only claim automation when evidence exists.
 - CV writing must be human-readable, specific, and role-native. Avoid generic AI-sounding phrasing and keyword stuffing.
 - Every strong claim must be interview-defensible.
 - Adjacent role recommendations must be based on target title, job description or market requirements, and candidate achievements.

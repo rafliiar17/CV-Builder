@@ -76,9 +76,9 @@ scripts/review-cv "Rafli Arraafi" CV_Rafli_Arraafi_ID.pdf --roles "Data Analyst,
 Baca `agents/00-extractor.md` dan normalisasi input CV menjadi format terstruktur.
 
 ### Step 2.25 — Jalankan Agent 00.25 (Role Discovery Interviewer)
-Baca `agents/00-role-discovery-interviewer.md`. Jika title perusahaan, target role, dan pekerjaan nyata kandidat tidak sinkron, ajukan pertanyaan diagnostik untuk menentukan role family dan level sebenarnya.
+Baca `agents/00-role-discovery-interviewer.md`. Mulai dari CV: klasifikasikan dulu domain umum kandidat, role family awal, level, dan mismatch antara title resmi dengan pekerjaan nyata. Setelah itu baru ajukan pertanyaan diagnostik universal dan domain-specific yang relevan.
 
-Agent ini wajib membedakan L1, L2, L3, Production Support, Application Support, SQL/Data Support, SysAdmin, dan DevOps berdasarkan bukti kerja, bukan berdasarkan title perusahaan.
+Agent ini harus bisa bekerja untuk kandidat general maupun tech. Jangan memaksakan pertanyaan tech untuk kandidat non-tech. Untuk kandidat tech/support, agent wajib membedakan L1, L2, L3, Production Support, Application Support, SQL/Data Support, Manual QA, SysAdmin, dan DevOps berdasarkan bukti kerja, bukan berdasarkan title perusahaan.
 
 ### Step 2.5 — Jalankan Agent 00.5 (Target Decision Gate)
 Baca `agents/00-target-decision-gate.md`. Tentukan target utama, target sekunder, market, bahasa output, strategi single/dual-track, dan hal yang harus dikecilkan atau dikeluarkan dari CV.

@@ -13,24 +13,34 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
 ### Phase 2 - Role Discovery Interview
 
 - Run Agent 00.25 when the candidate's official title, target role, and actual work are mixed or unclear.
-- This gate asks diagnostic questions about:
-  - ticket ownership
-  - RCA ownership
-  - SQL depth
-  - production data responsibility
-  - log/service debugging
-  - developer escalation
-  - workaround authority
-  - client communication
-  - SLA responsibility
-  - deployment and infrastructure exposure
-  - monitoring
-  - backup/restore
-  - code ownership boundary
-  - documentation
+- This gate must read the CV first and classify the candidate's broad domain before asking questions.
+- Start with universal diagnostics:
+  - actual day-to-day role
+  - main deliverables
+  - ownership level
+  - stakeholders
   - decision authority
+  - complexity
   - scale
   - daily tools
+  - measurable outcomes
+  - risk/compliance
+  - documentation
+  - escalation
+  - collaboration
+  - process improvement
+  - target-role evidence
+- Then choose the relevant domain-specific question bank:
+  - operations/administration
+  - customer service/support
+  - sales/business development
+  - finance/accounting
+  - marketing/content/creative
+  - HR/people operations
+  - project/product/business analysis
+  - data/analytics
+  - tech/IT/engineering/application support
+  - QA/testing
 - Output: `scratch/00-role-discovery-interview.md`
 - If the CV and existing context already answer the questions, summarize the evidence instead of asking the user again.
 
@@ -221,6 +231,7 @@ Agents must not be passive executors. They should challenge:
 - unclear target roles
 - official titles that do not match actual work
 - unsupported role level claims such as L3, DevOps, SysAdmin, or Data Analyst
+- QA/Manual Tester claims without test case, UAT, defect tracking, or bug evidence context
 - conflicting role combinations
 - unsupported skills
 - inflated ownership claims
