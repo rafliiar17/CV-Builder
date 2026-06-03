@@ -144,6 +144,23 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
   - folder structure completeness
   - stale output removal
 
+### Phase 11 - STAR Interview Preparation
+
+- Run Agent 10 after Final Verifier.
+- Create role-specific STAR story banks from verified CV evidence, role discovery, evidence gate, adjacent role strategy, portfolio mapping, and user clarifications.
+- STAR stories must include:
+  - Situation
+  - Task
+  - Action
+  - Result
+  - likely interview questions
+  - follow-up prep
+  - what not to overclaim
+- Output:
+  - `output/candidates/<candidate-slug>/<run-id>/interview/<target-role>/star-<target-role>-en.md`
+  - `output/candidates/<candidate-slug>/<run-id>/interview/<target-role>/star-<target-role>-id.md`
+- Render each Markdown file to `.docx` and `.pdf`.
+
 ## 2. Output Folder Contract
 
 The workflow should keep `output/` organized by candidate and run:
@@ -160,6 +177,8 @@ output/
         cv/
           <target-role>/
         portfolio/
+        interview/
+          <target-role>/
 ```
 
 Do not leave root-level CV/report files in `output/`. Never overwrite another candidate's run.
@@ -272,6 +291,12 @@ python scripts/render_outputs.py path/to/file.md
 
 ```bash
 python scripts/render_outputs.py output/candidates/rafli-arraafi/2026-06-01-data-analyst-application-support/cv/data-analyst/cv-data-analyst-en.md output/candidates/rafli-arraafi/2026-06-01-data-analyst-application-support/cv/data-analyst/cv-data-analyst-id.md
+```
+
+- STAR interview outputs should be stored separately from CV files:
+
+```bash
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/interview/application-support/star-application-support-en.md
 ```
 
 ## 8. Failure Handling

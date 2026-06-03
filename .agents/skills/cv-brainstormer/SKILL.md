@@ -10,7 +10,7 @@ description: >
   Trigger juga jika pengguna menyebut: "review CV", "perbaiki CV", "buat CV",
   "CV saya kurang apa", "ATS CV", "HR suka CV yang gimana", "CV yang bagus",
   "bikin CV dari nol", "CV brainstorm", atau menempel isi CV dan meminta feedback.
-  Skill ini menjalankan workflow multi-agent dengan core agents (00-09) plus
+  Skill ini menjalankan workflow multi-agent dengan core agents (00-10) plus
   strategic gate agents (00.25, 00.5, 04.5, 08.5). Output berupa report bilingual
   (Indonesia + English), CV siap pakai per role dan bahasa, serta portfolio
   mapping dalam format .md, .docx, dan .pdf.
@@ -26,7 +26,7 @@ Agents dalam workflow ini harus berpikir kritis. Mereka tidak boleh sekadar meny
 
 **Flow:**
 ```
-Input CV / Form → Agent 00 (Extractor) → Agent 00.25 (Role Discovery Interviewer) → Agent 00.5 (Target Decision Gate) → Agent 01–06 (paralel) → Agent 04.5 (Evidence Gate) → Agent 05.5 (Adjacent Role Strategist) → Agent 07 (Synthesizer) → Agent 08 (Role Tailor) → Agent 08.5 (Portfolio Mapper) → Agent 09 (Final Verifier) → Verified Output
+Input CV / Form → Agent 00 (Extractor) → Agent 00.25 (Role Discovery Interviewer) → Agent 00.5 (Target Decision Gate) → Agent 01–06 (paralel) → Agent 04.5 (Evidence Gate) → Agent 05.5 (Adjacent Role Strategist) → Agent 07 (Synthesizer) → Agent 08 (Role Tailor) → Agent 08.5 (Portfolio Mapper) → Agent 09 (Final Verifier) → Agent 10 (STAR Interview Coach) → Verified Output
 ```
 
 **Output Root:**
@@ -147,6 +147,17 @@ Output disimpan di folder report kandidat/run, misalnya `output/candidates/<cand
 
 **Mode Varian:** Jika user ingin cek varian role tertentu (misal `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-data-analyst-en.md`), panggil Agent 09 lagi dengan file tersebut sebagai input. Output: `output/candidates/<candidate-slug>/<run-id>/reports/delta-report-{role}-bilingual.md`
 
+### Step 8 — Jalankan Agent 10 (STAR Interview Coach)
+Baca `agents/10-star-interview-coach.md`. Buat STAR interview story bank berdasarkan CV final, evidence gate, role discovery, portfolio mapping, verification report, dan klarifikasi user.
+
+Output wajib masuk ke folder interview per role:
+
+```text
+output/candidates/<candidate-slug>/<run-id>/interview/<target-role>/
+```
+
+Setiap role harus punya versi English dan Indonesia jika CV role tersebut juga dibuat dalam dua bahasa.
+
 ---
 
 ## Agent Reference
@@ -168,6 +179,7 @@ Output disimpan di folder report kandidat/run, misalnya `output/candidates/<cand
 | `agents/08-role-tailor.md` | Role Tailor / Copywriter | Menyesuaikan isi CV untuk spesifik role / posisi baru secara natural dan defensible |
 | `agents/08-portfolio-mapper.md` | Portfolio Mapper | Memetakan project nyata ke role dan gap portfolio |
 | `agents/09-delta-verifier.md` | Final Verifier | Re-run ATS + Achievement, cek role fit, evidence risk, interview defensibility, portfolio completeness |
+| `agents/10-star-interview-coach.md` | STAR Interview Coach | Membuat story bank STAR interview per role dari klaim CV yang sudah diverifikasi |
 
 ---
 
@@ -207,6 +219,7 @@ Semua temuan diklasifikasikan:
 1. **Full Report** (`output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.md` / `.docx` / `.pdf`) — laporan lengkap bilingual dengan skor per agent, priority fix list, dan detail temuan
 2. **CV Role Variants** (`output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<role>-en.md` dan `cv-<role>-id.md`) — versi CV siap pakai per role dan bahasa
 3. **Portfolio Summary** (`output/candidates/<candidate-slug>/<run-id>/portfolio/projects-from-list.md`) — ringkasan portfolio dari project list user, jika tersedia
+4. **STAR Interview Story Bank** (`output/candidates/<candidate-slug>/<run-id>/interview/<role>/star-<role>-en.md` dan `star-<role>-id.md`) — jawaban interview berbasis STAR yang role-specific dan interview-defensible
 
 ---
 

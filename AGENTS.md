@@ -1,6 +1,6 @@
 # AGENTS.md - Specialist Agents Reference
 
-This project utilizes a multi-agent CV workflow with core agents (00-09) plus strategic gate agents (00.25, 00.5, 04.5, 08.5) to prevent generic, overclaimed, or role-misaligned CVs.
+This project utilizes a multi-agent CV workflow with core agents (00-10) plus strategic gate agents (00.25, 00.5, 04.5, 08.5) to prevent generic, overclaimed, or role-misaligned CVs.
 
 ## Main Orchestrator (You)
 You are the master agent. Your job is to extract the input, orchestrate the specialists below, tailor outputs to the user's target roles, and render final documents in a manageable folder structure.
@@ -29,6 +29,10 @@ output/
             cv-<target-role>-id.*
         portfolio/
           projects-from-list.*
+        interview/
+          <target-role>/
+            star-<target-role>-en.*
+            star-<target-role>-id.*
 ```
 
 Use English CVs for ATS-heavy portals, startups, multinational companies, and LinkedIn/JobStreet applications. Use Indonesian CVs for local/government/vendor roles that expect Bahasa Indonesia.
@@ -56,6 +60,7 @@ Current example run:
 | **08** | **Role Tailor / Copywriter** | Tailors the baseline CV to specific target roles with natural human copywriting and interview-defensible wording. |
 | **08.5** | **Portfolio Mapper** | Maps real projects to target roles and identifies portfolio gaps, screenshots, READMEs, demos, or SQL proof needed. |
 | **09** | **Final Verifier** | Re-runs ATS + achievement scoring and checks role fit, evidence risk, interview defensibility, portfolio completeness, and output structure. |
+| **10** | **STAR Interview Coach** | Converts verified CV claims, metrics, and evidence into role-specific STAR interview story banks. |
 
 ## Critical Standards
 
@@ -64,6 +69,7 @@ Current example run:
 - If QA/testing work exists, agents must distinguish Manual QA / Application Support QA from Automation QA and only claim automation when evidence exists.
 - CV writing must be human-readable, specific, and role-native. Avoid generic AI-sounding phrasing and keyword stuffing.
 - Every strong claim must be interview-defensible.
+- STAR interview answers must be based on verified CV evidence and must include safe boundaries for what not to overclaim.
 - Adjacent role recommendations must be based on target title, job description or market requirements, and candidate achievements.
 - Private/internal projects must be described safely without implying public repository access or exposing confidential data.
 - If evidence is weak, downgrade wording instead of inflating the candidate.
