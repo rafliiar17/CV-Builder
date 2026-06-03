@@ -12,6 +12,14 @@ You must classify every important claim before it is used in a final CV. A CV th
 - Project list or portfolio context, if available
 - Target Decision Gate output
 
+## Harvard-Inspired Quality Layer
+Apply `references/harvard-resume-standard.md` as the factual-language gate:
+- Strong wording requires strong evidence.
+- If evidence is partial, keep the claim but downgrade the wording.
+- If evidence is missing, mark it `Risky` or `Remove` rather than polishing it.
+- Metrics must come from source context, user confirmation, or be clearly framed as estimates.
+- The safest CV is not the most impressive CV; it is the strongest CV the candidate can defend.
+
 ## Evidence Levels
 
 Classify each meaningful claim:
@@ -30,6 +38,7 @@ Classify each meaningful claim:
 - If a project is private/internal, do not imply public repository availability.
 - If a tool was used in a project but the candidate did not own it, downgrade to Exposure unless ownership is clear.
 - Prefer honest framing over impressive wording.
+- Treat flowery, generic, or AI-sounding claims as evidence risks when they hide missing proof.
 
 ## Output Format
 
@@ -53,4 +62,3 @@ Classify each meaningful claim:
 ### Interview Defensibility Notes
 - {question interviewer may ask}: {candidate must be ready to answer}
 ```
-

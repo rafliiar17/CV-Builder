@@ -22,6 +22,10 @@ slugify() {
     | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/-+/-/g'
 }
 
+file_slugify() {
+  slugify "$1" | tr '-' '_'
+}
+
 candidate_name=""
 cv_file=""
 roles=""
@@ -84,6 +88,7 @@ if [[ -n "$projects_file" && ! -f "$projects_file" ]]; then
 fi
 
 candidate_slug="$(slugify "$candidate_name")"
+candidate_file_slug="$(file_slugify "$candidate_name")"
 target_slug="$(slugify "$roles")"
 run_id="${run_date}-${target_slug}"
 run_dir="output/candidates/${candidate_slug}/${run_id}"
@@ -113,12 +118,44 @@ Output strategy:
 - Use the full cv-brainstormer workflow.
 - Create role-specific CV variants.
 - Create English and Indonesian CV variants unless the target decision gate says otherwise.
+- Name CV files as \`cv-${candidate_file_slug}-<target-role>-en.md\` and \`cv-${candidate_file_slug}-<target-role>-id.md\`.
 - Keep all outputs inside this run folder.
 
 Run folder:
 
 \`${run_dir}\`
 EOF_BRIEF
+
+cat > "${run_dir}/input/harvard-resume-checklist.md" <<'EOF_HARVARD'
+# Harvard-Inspired Resume Checklist
+
+Use this checklist during CV analysis, synthesis, role tailoring, and final verification.
+
+## Quality Principles
+
+- Tailor the CV to the target role and employer-valued skills.
+- Use specific, active, factual language.
+- Quantify or qualify claims where evidence supports it.
+- Write for people and systems that scan quickly.
+- Keep formatting consistent, clean, reverse chronological, and PDF-safe.
+- Use recognizable section headers such as Experience, Education, Skills, Projects, and Certifications.
+- Avoid personal pronouns, narrative style, slang, flowery language, photos, age, gender, and references.
+- Treat AI as an editing aid only; the final CV must stay authentic and interview-defensible.
+
+## Light Gate Labels
+
+- Pass: no major issue remains.
+- Minor Issues: usable, but polish remains.
+- Needs Revision: not ready to call ready-to-send because major issues remain.
+
+## Required Final Verification
+
+Agent 09 must include a Harvard Resume Standard Check with one of:
+
+- Pass
+- Minor Issues
+- Needs Revision
+EOF_HARVARD
 
 cat > "output/candidates/${candidate_slug}/LATEST.md" <<EOF_LATEST
 # Latest Run
@@ -139,6 +176,7 @@ Initialized CV review run:
 Input files:
   ${run_dir}/input/original-cv.${cv_ext}
   ${run_dir}/input/target-brief.md
+  ${run_dir}/input/harvard-resume-checklist.md
 EOF_DONE
 
 if [[ -n "$projects_file" ]]; then
@@ -154,6 +192,13 @@ ${run_dir}/input/original-cv.${cv_ext}
 
 Target brief:
 ${run_dir}/input/target-brief.md
+
+Harvard resume checklist:
+${run_dir}/input/harvard-resume-checklist.md
+
+CV filename convention:
+cv-${candidate_file_slug}-<target-role>-en.md
+cv-${candidate_file_slug}-<target-role>-id.md
 EOF_PROMPT
 
 if [[ -n "$projects_file" ]]; then
@@ -165,6 +210,8 @@ cat <<EOF_PROMPT_END
 
 Ikuti workflow lengkap:
 Agent 00, Agent 00.25 Role Discovery Interviewer, Agent 00.5 Target Decision Gate, Agents 01-06, Agent 04.5 Evidence Gate, Agent 05.5 Adjacent Role Strategist, Agent 07 Synthesizer, Agent 08 Role Tailor, Agent 08.5 Portfolio Mapper, Agent 09 Final Verifier, dan Agent 10 STAR Interview Coach.
+
+Gunakan Harvard resume checklist untuk memastikan CV tailored, spesifik, aktif, faktual, mudah discan, formatnya aman ATS, dan tidak overclaim. Agent 09 wajib menyertakan Harvard Resume Standard Check dengan status Pass, Minor Issues, atau Needs Revision.
 
 Output wajib masuk ke:
 ${run_dir}

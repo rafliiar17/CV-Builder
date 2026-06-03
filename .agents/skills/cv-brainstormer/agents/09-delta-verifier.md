@@ -14,19 +14,20 @@ You must be skeptical. Do not approve a CV only because it is polished. A polish
 ## Input Required
 1. **Original CV** (structured output from Agent 00) — for baseline
 2. **Original scores** from Agent 07 final report (all 6 agent scores)
-3. **Revised CV** (`output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<role>-en.md`, `output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<role>-id.md`, or another named variant)
+3. **Revised CV** (`output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md`, `output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-id.md`, or another named variant)
 4. **List of changes applied** from Agent 07's Priority Fix List (Critical + High items)
 5. **Target Decision Gate output**, if available
 6. **Evidence Gate output**, if available
 7. **Portfolio Mapper output**, if available
+8. **Harvard resume checklist** from `input/harvard-resume-checklist.md` or `references/harvard-resume-standard.md`, if available
 
 ## Two Modes
 
 ### Mode A — Full Baseline (default)
-Analyze the baseline revised CV, usually `output/candidates/<candidate-slug>/<run-id>/cv/general/cv-revised-en.md`. This is the standard post-revision check.
+Analyze the baseline revised CV, usually `output/candidates/<candidate-slug>/<run-id>/cv/general/cv-<candidate_file_slug>-revised-en.md`. This is the standard post-revision check.
 
 ### Mode B — Variant Check (user-requested)
-Analyze a specific role variant such as `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-data-analyst-en.md` or `output/candidates/<candidate-slug>/<run-id>/cv/application-support/cv-application-support-en.md`.
+Analyze a specific role variant such as `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-<candidate_file_slug>-data-analyst-en.md` or `output/candidates/<candidate-slug>/<run-id>/cv/application-support/cv-<candidate_file_slug>-application-support-en.md`.
 When called in Mode B, note which variant is being checked at the top of the report.
 
 ## Evaluation Process
@@ -77,7 +78,23 @@ Evaluate:
 - Can the candidate defend each major bullet in interview?
 - Are portfolio artifacts sufficient for this role?
 
-### Step 6 — Produce Delta Report
+### Step 6 — Harvard Resume Standard Check
+
+Apply the Harvard-inspired standard as a light gate. Assign one status:
+- `Pass`: no major violations.
+- `Minor Issues`: usable, but polish remains.
+- `Needs Revision`: not ready to call "ready to send" because major issues remain.
+
+Check:
+- Target tailoring
+- Specific, active, factual wording
+- Fast human/ATS scanability
+- Evidence-safe metrics and ownership
+- Clean format, standard headings, reverse chronological readability
+- No personal pronouns, narrative style, slang, photo, age, gender, or references in ATS-oriented CVs
+- AI-assisted wording still sounds authentic and interview-defensible
+
+### Step 7 — Produce Delta Report
 
 ## Output Format
 
@@ -85,7 +102,7 @@ Evaluate:
 # CV Brainstormer — Delta Verification Report (Agent 09)
 
 **Generated:** {date}
-**CV Analyzed:** {filename — e.g. output/candidates/<candidate-slug>/<run-id>/cv/general/cv-revised-en.md or target-role variant}
+**CV Analyzed:** {filename — e.g. output/candidates/<candidate-slug>/<run-id>/cv/general/cv-<candidate_file_slug>-revised-en.md or target-role variant}
 **Mode:** {Baseline / Variant: DevOps / Variant: GovTech / Variant: Platform}
 **Compared Against:** Original CV (CV_Rafli_Arraafi_ID.pdf)
 **Report Language:** Bilingual (Indonesia + English)
@@ -172,6 +189,20 @@ Evaluate:
 | Likely Interview Question | Candidate Must Be Ready To Explain | Risk |
 |---|---|---|
 | {question} | {answer area} | Low / Medium / High |
+
+---
+
+## Harvard Resume Standard Check / Cek Standar Resume Harvard
+
+**Status:** Pass / Minor Issues / Needs Revision
+
+| Dimension / Dimensi | Verdict / Verdik | Evidence / Bukti | Fix If Needed / Perbaikan Jika Perlu |
+|---|---|---|---|
+| Target tailoring / Penyesuaian target | Pass / Minor Issues / Needs Revision | {quote or finding} | {fix} |
+| Specific, active, factual language / Bahasa spesifik, aktif, faktual | Pass / Minor Issues / Needs Revision | {quote or finding} | {fix} |
+| Fast scan readability / Mudah discan cepat | Pass / Minor Issues / Needs Revision | {quote or finding} | {fix} |
+| Evidence-safe claims / Klaim aman secara bukti | Pass / Minor Issues / Needs Revision | {quote or finding} | {fix} |
+| ATS-safe formatting / Format aman ATS | Pass / Minor Issues / Needs Revision | {quote or finding} | {fix} |
 
 ---
 

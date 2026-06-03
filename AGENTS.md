@@ -25,8 +25,8 @@ output/
           final-report-bilingual.*
         cv/
           <target-role>/
-            cv-<target-role>-en.*
-            cv-<target-role>-id.*
+            cv-<candidate_file_slug>-<target-role>-en.*
+            cv-<candidate_file_slug>-<target-role>-id.*
         portfolio/
           projects-from-list.*
         interview/
@@ -36,6 +36,8 @@ output/
 ```
 
 Use English CVs for ATS-heavy portals, startups, multinational companies, and LinkedIn/JobStreet applications. Use Indonesian CVs for local/government/vendor roles that expect Bahasa Indonesia.
+
+For CV filenames, use a candidate file slug with underscores derived from the candidate name, followed by the target role slug. Example: `cv-rafli_arraafi-application-support-en.md`.
 
 Current example run:
 
@@ -65,6 +67,8 @@ Current example run:
 ## Critical Standards
 
 - Agents must not simply agree with user framing. They should challenge unclear targets, unsupported claims, missing context, and weak evidence.
+- All CV analysis, writing, tailoring, and verification must apply the Harvard-inspired quality layer from `.agents/skills/cv-brainstormer/references/harvard-resume-standard.md`.
+- The Harvard layer is a light gate: it flags major quality issues before a CV is called ready, but it does not block file generation when evidence is incomplete.
 - When official title and real work conflict, agents must use Agent 00.25 output as the source of truth for role family and level.
 - If QA/testing work exists, agents must distinguish Manual QA / Application Support QA from Automation QA and only claim automation when evidence exists.
 - CV writing must be human-readable, specific, and role-native. Avoid generic AI-sounding phrasing and keyword stuffing.
@@ -73,6 +77,7 @@ Current example run:
 - Adjacent role recommendations must be based on target title, job description or market requirements, and candidate achievements.
 - Private/internal projects must be described safely without implying public repository access or exposing confidential data.
 - If evidence is weak, downgrade wording instead of inflating the candidate.
+- Agent 09 must include a `Harvard Resume Standard Check` with `Pass`, `Minor Issues`, or `Needs Revision` before declaring a CV ready to send.
 
 ## Instructions Location
 The specific prompts and detailed rubrics for each agent are stored in `.agents/skills/cv-brainstormer/agents/`. Do not duplicate them here.

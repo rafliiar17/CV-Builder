@@ -24,6 +24,8 @@ Sistem ini menganalisis CV dari perspektif specialist berbeda, menghasilkan lapo
 
 Agents dalam workflow ini harus berpikir kritis. Mereka tidak boleh sekadar menyetujui framing user jika target role tidak jelas, bukti lemah, klaim terlalu tinggi, atau konteks role meleset. Agent penulis CV wajib menulis dengan kualitas copywriting human: natural, spesifik, tidak kaku, tidak keyword stuffing, dan tetap interview-defensible.
 
+Workflow ini juga memakai Harvard-inspired resume quality layer dari `references/harvard-resume-standard.md`. Layer ini menuntut CV yang tailored, spesifik, aktif, faktual, mudah discan manusia/ATS, formatnya konsisten, dan bebas overclaim. Agent 09 wajib memberi status `Pass`, `Minor Issues`, atau `Needs Revision` untuk standar ini sebelum CV disebut ready to send.
+
 **Flow:**
 ```
 Input CV / Form → Agent 00 (Extractor) → Agent 00.25 (Role Discovery Interviewer) → Agent 00.5 (Target Decision Gate) → Agent 01–06 (paralel) → Agent 04.5 (Evidence Gate) → Agent 05.5 (Adjacent Role Strategist) → Agent 07 (Synthesizer) → Agent 08 (Role Tailor) → Agent 08.5 (Portfolio Mapper) → Agent 09 (Final Verifier) → Agent 10 (STAR Interview Coach) → Verified Output
@@ -96,6 +98,8 @@ Gunakan output Agent 00 sebagai input untuk semua agent berikut secara bersamaan
 - `agents/05-industry-analyst.md` — Industry fit & JD alignment
 - `agents/06-bias-checker.md` — Bias & inclusion check
 
+Gunakan juga checklist Harvard dari `input/harvard-resume-checklist.md` jika ada, atau fallback ke `references/harvard-resume-standard.md`.
+
 ### Step 3.5 — Jalankan Agent 04.5 (Evidence Gate)
 Baca `agents/04-evidence-gate.md`. Klasifikasikan klaim, skill, project, dan metrik menjadi:
 - Proven
@@ -118,11 +122,11 @@ Agent ini boleh menolak atau menurunkan target role user jika bukti belum cukup,
 
 ### Step 4 — Jalankan Agent 07 (Synthesizer)
 Baca `agents/07-synthesizer.md`. Berikan semua output dari Agent 00–06 sebagai input.
-Output: Full report bilingual + CV revised draft. Agent ini wajib menyelesaikan konflik antar-agent, menjaga konteks role, dan menulis CV dengan copywriting human yang natural serta defensible.
+Output: Full report bilingual + CV revised draft. Agent ini wajib menyelesaikan konflik antar-agent, menjaga konteks role, menulis CV dengan copywriting human yang natural serta defensible, dan menyertakan Harvard Resume Quality Check.
 
 ### Step 5 — Jalankan Agent 08 (Role Tailor)
 Gunakan insight dari Agent 05 (Industry Analyst) tentang role relevan atau minta *user* menyebutkan posisi yang diincarnya.
-Spawn subagent paralel jika tersedia, atau jalankan secara lokal, untuk membaca instruksi di `agents/08-role-tailor.md` dan mengadaptasi output CV dari Agent 07 agar selaras dengan masing-masing role target. Hasilkan *file* terpisah per role dan bahasa, misalnya `cv-data-analyst-en.md` dan `cv-data-analyst-id.md`.
+Spawn subagent paralel jika tersedia, atau jalankan secara lokal, untuk membaca instruksi di `agents/08-role-tailor.md` dan mengadaptasi output CV dari Agent 07 agar selaras dengan masing-masing role target. Hasilkan *file* terpisah per role dan bahasa memakai kandidat file slug underscore, misalnya `cv-rafli_arraafi-data-analyst-en.md` dan `cv-rafli_arraafi-data-analyst-id.md`.
 
 ### Step 5.5 — Jalankan Agent 08.5 (Portfolio Mapper)
 Baca `agents/08-portfolio-mapper.md`. Petakan project nyata dari user ke target role, tentukan project mana yang dipakai, mana yang harus dikecilkan, dan artefak portfolio apa yang kurang (README, screenshot, SQL snippet, demo, atau mockup).
@@ -130,12 +134,12 @@ Baca `agents/08-portfolio-mapper.md`. Petakan project nyata dari user ke target 
 ### Step 6 — Render output (opsional, butuh Python)
 ```bash
 python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.md
-python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-data-analyst-en.md output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-data-analyst-id.md
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-<candidate_file_slug>-data-analyst-en.md output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-<candidate_file_slug>-data-analyst-id.md
 ```
 Menghasilkan `.docx` dan `.pdf` dari report dan berbagai varian CV.
 
 ### Step 7 — Jalankan Agent 09 (Final Verifier)
-Baca `agents/09-delta-verifier.md`. Jalankan **dua subagent paralel** (re-run Agent 01 + Agent 04) terhadap varian CV yang ingin diverifikasi, misalnya `output/candidates/<candidate-slug>/<run-id>/cv/general/cv-revised-en.md` atau `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-data-analyst-en.md`, lalu jalankan Delta Synthesizer yang membaca:
+Baca `agents/09-delta-verifier.md`. Jalankan **dua subagent paralel** (re-run Agent 01 + Agent 04) terhadap varian CV yang ingin diverifikasi, misalnya `output/candidates/<candidate-slug>/<run-id>/cv/general/cv-<candidate_file_slug>-revised-en.md` atau `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-<candidate_file_slug>-data-analyst-en.md`, lalu jalankan Delta Synthesizer yang membaca:
 - Skor original dari Agent 07
 - Hasil re-run Agent 01 & 04
 - Priority Fix List dari Agent 07 (untuk verifikasi item mana yang sudah diterapkan)
@@ -145,7 +149,9 @@ Baca `agents/09-delta-verifier.md`. Jalankan **dua subagent paralel** (re-run Ag
 
 Output disimpan di folder report kandidat/run, misalnya `output/candidates/<candidate-slug>/<run-id>/reports/delta-report-bilingual.md` (+ `.docx` + `.pdf`) jika verifikasi delta diperlukan.
 
-**Mode Varian:** Jika user ingin cek varian role tertentu (misal `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-data-analyst-en.md`), panggil Agent 09 lagi dengan file tersebut sebagai input. Output: `output/candidates/<candidate-slug>/<run-id>/reports/delta-report-{role}-bilingual.md`
+Agent 09 wajib menyertakan `Harvard Resume Standard Check` dengan status `Pass`, `Minor Issues`, atau `Needs Revision`. Status `Needs Revision` berarti CV boleh tetap dirender, tetapi tidak boleh disebut siap dikirim.
+
+**Mode Varian:** Jika user ingin cek varian role tertentu (misal `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-<candidate_file_slug>-data-analyst-en.md`), panggil Agent 09 lagi dengan file tersebut sebagai input. Output: `output/candidates/<candidate-slug>/<run-id>/reports/delta-report-{role}-bilingual.md`
 
 ### Step 8 — Jalankan Agent 10 (STAR Interview Coach)
 Baca `agents/10-star-interview-coach.md`. Buat STAR interview story bank berdasarkan CV final, evidence gate, role discovery, portfolio mapping, verification report, dan klarifikasi user.
@@ -217,7 +223,7 @@ Semua temuan diklasifikasikan:
 ## Output yang Dihasilkan
 
 1. **Full Report** (`output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.md` / `.docx` / `.pdf`) — laporan lengkap bilingual dengan skor per agent, priority fix list, dan detail temuan
-2. **CV Role Variants** (`output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<role>-en.md` dan `cv-<role>-id.md`) — versi CV siap pakai per role dan bahasa
+2. **CV Role Variants** (`output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md` dan `cv-<candidate_file_slug>-<role>-id.md`) — versi CV siap pakai per role dan bahasa
 3. **Portfolio Summary** (`output/candidates/<candidate-slug>/<run-id>/portfolio/projects-from-list.md`) — ringkasan portfolio dari project list user, jika tersedia
 4. **STAR Interview Story Bank** (`output/candidates/<candidate-slug>/<run-id>/interview/<role>/star-<role>-en.md` dan `star-<role>-id.md`) — jawaban interview berbasis STAR yang role-specific dan interview-defensible
 

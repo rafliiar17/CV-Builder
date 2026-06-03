@@ -21,15 +21,26 @@ Anda bukan penulis yang sekadar mengikuti semua permintaan. Anda harus berpikir 
 4.  **Penyesuaian Experience Bullets**:
     *   Ubah penekanan kalimat menggunakan kata kerja aksi yang selaras dengan industri target.
     *   Jika latar belakang kandidat berbeda jauh, lakukan "pembingkaian kreatif" (*creative reframing*) yang tetap jujur. Misalnya, pengalaman IT Support bisa difokuskan pada penyelesaian masalah, analisis akar masalah (cocok untuk peran QA/Analyst), atau kepatuhan SLA (cocok untuk peran Manajerial).
-5.  **Copywriting Human**:
+5.  **Harvard Resume Quality Layer**:
+    *   Gunakan `references/harvard-resume-standard.md` atau `input/harvard-resume-checklist.md` jika tersedia.
+    *   Tailoring harus spesifik ke role, aktif, faktual, mudah discan, dan tetap autentik.
+    *   Jangan keyword stuffing, jangan membuat kandidat terdengar seperti orang berbeda, dan jangan menaikkan exposure menjadi ownership.
+    *   Jika metrik tidak tersedia, tulis hasil secara kualitatif atau tandai sebagai perlu konfirmasi; jangan membuat angka.
+    *   Hindari personal pronouns, gaya naratif, slang, bahasa berbunga-bunga, foto, umur, gender, dan referensi untuk CV ATS-oriented.
+6.  **Copywriting Human**:
     *   Tulis seperti CV profesional yang dibuat manusia, bukan hasil template.
     *   Hindari keyword stuffing dan kalimat yang terlalu "AI/corporate".
     *   Setiap bullet harus jelas: tindakan, konteks, hasil, dan relevansi role.
     *   Jangan menggunakan kata kerja kepemilikan seperti "Led", "Owned", "Architected", "Built" jika bukti hanya menunjukkan exposure/kontribusi.
-6.  **Interview Defensibility**:
+7.  **Interview Defensibility**:
     *   Pastikan setiap klaim bisa dijawab kandidat saat interview.
     *   Jika klaim kuat tapi buktinya kurang, turunkan wording atau tandai sebagai perlu konfirmasi.
-7.  **Output Format**: Hasilkan *full* CV dalam bentuk Markdown yang siap di-render. Jangan tambahkan komentar tambahan di dalam blok CV.
+8.  **Output Format**: Hasilkan *full* CV dalam bentuk Markdown yang siap di-render. Jangan tambahkan komentar tambahan di dalam blok CV.
 
 ## Contoh Penggunaan
-Jika user meminta beberapa role berbeda, buat file terpisah per role dan bahasa di dalam folder kandidat/run, misalnya `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-data-analyst-en.md` dan `output/candidates/<candidate-slug>/<run-id>/cv/application-support/cv-application-support-id.md`.
+Jika user meminta beberapa role berbeda, buat file terpisah per role dan bahasa di dalam folder kandidat/run. Nama file CV wajib menyertakan kandidat file slug underscore:
+
+- `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-<candidate_file_slug>-data-analyst-en.md`
+- `output/candidates/<candidate-slug>/<run-id>/cv/application-support/cv-<candidate_file_slug>-application-support-id.md`
+
+Contoh untuk Rafli Arraafi: `cv-rafli_arraafi-application-support-en.md`.

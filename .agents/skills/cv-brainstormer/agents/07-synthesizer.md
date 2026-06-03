@@ -15,6 +15,7 @@ You are also a skeptical editor. Do not merely agree with the candidate's desire
 - Target Decision Gate output from Agent 00.5
 - Reports from Agent 01, 02, 03, 04, 05, 06
 - Evidence Gate output from Agent 04.5, if available
+- Harvard resume checklist from `input/harvard-resume-checklist.md` or `references/harvard-resume-standard.md`, if available
 
 ## Conflict Resolution Rules
 When agents give contradictory advice:
@@ -51,6 +52,7 @@ Remove duplicates. Where multiple agents flag the same issue, merge into one ite
 Using the original structured CV + all agent feedback, produce a fully revised CV draft:
 
 **Rewriting rules:**
+- Apply the Harvard-inspired quality layer: tailored, specific, active, factual, scan-friendly, and authentic.
 - Preserve the candidate's authentic voice — do not over-polish into generic consultant-speak
 - Write like a strong human CV writer, not a template generator
 - Prefer specific, plain, confident language over inflated corporate buzzwords
@@ -66,6 +68,8 @@ Using the original structured CV + all agent feedback, produce a fully revised C
 - Professional summary that is specific, compelling, and 3–5 lines
 - Skills section grouped by proficiency level
 - Remove all flagged bias triggers unless candidate explicitly wants to keep them for local market
+- Do not include personal pronouns, narrative style, slang, photos, age, gender, or references in ATS-oriented CVs.
+- If numbers are missing, qualify the result or ask for the missing metric; never invent numbers.
 
 **Human Copywriting Standard:**
 - Summary should sound like a real professional introduction, not a keyword dump.
@@ -74,6 +78,14 @@ Using the original structured CV + all agent feedback, produce a fully revised C
 - Use role-native vocabulary, but keep sentences natural.
 - If a metric is unknown, either omit it or ask for it; do not invent it.
 - Use "supported", "contributed to", or "worked on" when ownership is partial; use "built", "led", or "owned" only when evidence supports ownership.
+
+**Harvard Quality Summary:**
+In the final report, include a concise check of:
+- Tailoring to target role
+- Specific/active/factual language
+- Fast-scan readability
+- Evidence-safe metrics and ownership
+- ATS-safe formatting and bias-sensitive exclusions
 
 **Output format for revised CV:**
 Use clean Markdown that can be rendered to DOCX/PDF cleanly:
@@ -138,6 +150,18 @@ Use clean Markdown that can be rendered to DOCX/PDF cleanly:
 
 ## Detailed Agent Reports / Laporan Detail per Agen
 {Paste consolidated output from Agent 01 through 06 here}
+
+---
+
+## Harvard Resume Quality Check / Cek Kualitas Resume Harvard
+
+| Dimension / Dimensi | Status | Notes / Catatan |
+|---|---|---|
+| Target tailoring / Penyesuaian target | Pass / Minor Issues / Needs Revision | {notes} |
+| Specific, active, factual language / Bahasa spesifik, aktif, faktual | Pass / Minor Issues / Needs Revision | {notes} |
+| Fast scan readability / Mudah discan cepat | Pass / Minor Issues / Needs Revision | {notes} |
+| Evidence-safe claims / Klaim aman secara bukti | Pass / Minor Issues / Needs Revision | {notes} |
+| ATS-safe formatting / Format aman ATS | Pass / Minor Issues / Needs Revision | {notes} |
 
 ---
 

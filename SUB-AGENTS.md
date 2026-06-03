@@ -68,6 +68,7 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
   - 06 Bias Checker
 - Parallelize only when the runtime supports actual subagents. In Codex, use available multi-agent tools only when the user explicitly asks for subagents/delegation or when the environment authorizes it.
 - If no subagent tool is available, run the rubrics locally and clearly label each agent section.
+- Apply the Harvard-inspired quality layer from `input/harvard-resume-checklist.md` or `.agents/skills/cv-brainstormer/references/harvard-resume-standard.md` during ATS, HR, achievement, and evidence analysis.
 
 ### Phase 5 - Evidence Gate
 
@@ -103,6 +104,7 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
 - Run Agent 07 to synthesize findings into a bilingual report and baseline CV.
 - Agent 07 must write like a human CV strategist, not a template generator.
 - Agent 07 must resolve conflicts and challenge unsupported framing.
+- Agent 07 must include a Harvard-informed quality check covering target tailoring, specific/active/factual language, scanability, evidence-safe claims, and ATS-safe formatting.
 - Output:
   - `output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.md`
   - `output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.docx`
@@ -143,6 +145,7 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
   - language separation
   - folder structure completeness
   - stale output removal
+- Agent 09 must include `Harvard Resume Standard Check` with `Pass`, `Minor Issues`, or `Needs Revision`. Treat this as a light gate: files can still be generated, but a CV with `Needs Revision` cannot be called ready to send.
 
 ### Phase 11 - STAR Interview Preparation
 
@@ -190,6 +193,15 @@ Use a lowercase ASCII slug derived from the candidate name:
 - `Rafli Arraafi Albaasith` -> `rafli-arraafi`
 - Remove titles, punctuation, and duplicate spaces.
 - If two candidates share the same slug, append a short suffix such as `-2` or a date.
+
+### CV Filename Slug
+
+Use an underscore slug derived from the candidate name for CV filenames:
+
+- `Rafli Arraafi Albaasith` -> `rafli_arraafi`
+- CV files must use `cv-<candidate_file_slug>-<target-role>-<language>.md`.
+- Example: `cv-rafli_arraafi-application-support-en.md`.
+- Keep role folders kebab-case, for example `cv/application-support/`.
 
 ### Run ID
 
@@ -270,6 +282,7 @@ Agents responsible for CV writing must:
 - keep bullets specific, contextual, and readable
 - downgrade wording when evidence is partial
 - preserve the candidate's real career narrative
+- follow the Harvard-inspired standard: tailored, active, factual, scan-friendly, and free from narrative style, personal pronouns, slang, photos, age, gender, and references unless a local-market exception is explicitly chosen.
 
 ## 7. Tooling
 
@@ -290,7 +303,7 @@ python scripts/render_outputs.py path/to/file.md
 - For multiple files:
 
 ```bash
-python scripts/render_outputs.py output/candidates/rafli-arraafi/2026-06-01-data-analyst-application-support/cv/data-analyst/cv-data-analyst-en.md output/candidates/rafli-arraafi/2026-06-01-data-analyst-application-support/cv/data-analyst/cv-data-analyst-id.md
+python scripts/render_outputs.py output/candidates/rafli-arraafi/2026-06-01-data-analyst-application-support/cv/data-analyst/cv-rafli_arraafi-data-analyst-en.md output/candidates/rafli-arraafi/2026-06-01-data-analyst-application-support/cv/data-analyst/cv-rafli_arraafi-data-analyst-id.md
 ```
 
 - STAR interview outputs should be stored separately from CV files:
