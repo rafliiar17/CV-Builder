@@ -91,27 +91,6 @@ CV Brainstormer uses a Harvard-inspired resume quality layer as a light gate. Th
 
 The standard checks whether the CV is tailored, specific, active, factual, scan-friendly, ATS-safe, and free from unsupported overclaims.
 
-## OpenAI Codex For OSS Application Notes
-
-Suggested answer for "Why does this repository qualify?" under 500 characters:
-
-```text
-CV Brainstormer is an active OSS workflow for maintainers and job seekers who need evidence-safe, ATS-friendly CV reviews. It combines specialist agent rubrics for extraction, ATS, HR, tech, achievements, bias, portfolio mapping, verification, and STAR interview prep, with structured outputs that can be reused and improved by the ecosystem.
-```
-
-Suggested answer for "How will you use API credits for your project?" under 500 characters:
-
-```text
-API credits will be used to run and test the multi-agent CV review workflow: extracting CV text, evaluating ATS and HR quality, checking evidence strength, tailoring bilingual CV variants, mapping portfolios, and generating STAR interview prep. Credits will also support regression tests, prompt iteration, and maintainer automation for releases and documentation.
-```
-
-Suggested answer for "Anything else we should know?" under 500 characters:
-
-```text
-The project is built to avoid inflated or generic AI resumes. Its core standard is interview-defensible writing: claims are downgraded or removed when evidence is weak. Candidate files are kept out of Git by default, while the reusable workflow, agent rubrics, templates, and scripts remain open for community use.
-```
-
 ## Repository Status
 
 This repository is maintained as a practical workflow project, not a packaged library. Before applying to Codex for Open Source, make sure the GitHub repository is public and add accurate adoption signals if available, such as stars, forks, issues, external users, or real usage examples.
-

@@ -7,3 +7,4 @@ input/
 *.docx
 __pycache__/
 .DS_Store
+codex-for-oss-application-notes.md
