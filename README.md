@@ -2,7 +2,7 @@
 
 CV Brainstormer is an open-source, multi-agent workflow for reviewing, improving, and generating professional CVs. It is designed for candidates who need role-specific, ATS-friendly, and interview-defensible CV outputs in English and Indonesian.
 
-The project turns a raw CV and target-role brief into structured analysis, tailored CV variants, portfolio mapping, and STAR interview preparation. It is especially useful when a candidate's job title, actual work, target role, and available evidence do not line up cleanly.
+The project turns a raw CV and target-role brief into structured analysis, market salary intelligence, tailored CV variants, portfolio mapping, STAR interview preparation, and global job application packages. It is especially useful when a candidate's job title, actual work, target role, and available evidence do not line up cleanly.
 
 ## Why This Exists
 
@@ -18,20 +18,23 @@ The goal is not to make a CV sound bigger than the candidate's experience. The g
 
 ## Workflow
 
-The workflow uses specialist agent instructions stored in `.agents/skills/cv-brainstormer/agents/`.
+The workflow orchestrates an 18-agent roster (Agents 00–11 plus strategic gate agents) stored in `.agents/skills/cv-brainstormer/agents/`.
 
 Core phases:
 
-1. Extract and normalize the original CV.
-2. Discover the candidate's real role family and level when titles or targets conflict.
-3. Decide target role, market, language, and single-track or dual-track strategy.
-4. Run ATS, HR, tech stack, achievement, industry, and bias reviews.
-5. Classify evidence strength before writing.
-6. Recommend adjacent roles when the requested target is not yet well supported.
-7. Write role-aware CV variants in English and Indonesian.
-8. Map portfolio projects to target roles.
-9. Verify output quality and interview defensibility.
-10. Generate STAR interview story banks.
+1. **Extraction (Agent 00)**: Normalize raw CV text (PDF/DOCX) into structured Markdown.
+2. **Role Discovery Interview (Agent 00.25)**: Classify real role family and level when official titles, actual work, or targets mismatch.
+3. **Target Decision Gate (Agent 00.5)**: Lock primary/secondary targets, market, language, and single/dual-track strategy.
+4. **Deep Specialist Analysis (Agents 01–06)**: Parallel review covering ATS compliance, HR 6-second scan, tech stack credibility, achievement auditing, industry/JD fit with original role match percentage, and bias checking.
+5. **Evidence Gate (Agent 04.5)**: Classify claims as proven, project-backed, exposure, learning, risky, or remove.
+6. **Adjacent Role Strategy (Agent 05.5)**: Recommend closest realistic roles and transition paths based on achievements and market needs.
+7. **Salary Market Analysis (Agent 05.75)**: Deep-dive current compensation ranges with verified fresh sources, SGD/USD/IDR conversions, and negotiation positioning.
+8. **Synthesis & Baseline CV (Agent 07)**: Synthesize findings into a bilingual report and write an evidence-safe, human baseline CV.
+9. **Role Tailoring & Copywriting (Agent 08)**: Craft role-specific, interview-defensible CV variants in English and Indonesian.
+10. **Portfolio Mapping (Agent 08.5)**: Map real projects to target roles and identify missing proof (code, READMEs, SQL snippets, demos).
+11. **Verification (Agent 09)**: Re-run ATS & achievement audits, compute role match delta, and enforce the Harvard Resume Standard gate.
+12. **STAR Interview Preparation (Agent 10)**: Create role-specific STAR story banks with situational prep and overclaim guardrails.
+13. **Application Package & Platform Profiles (Agent 11)**: Generate targeted cover letters, application emails, follow-up emails, and consolidated profiles for Upwork, LinkedIn, and Glints.
 
 ## Output Structure
 
@@ -51,6 +54,9 @@ output/
         scratch/
         reports/
           final-report-bilingual.*
+        salary/
+          <target-role>/
+            salary-market-<target-role>.*
         cv/
           <target-role>/
             cv-<candidate_file_slug>-<target-role>-en.*
@@ -61,6 +67,16 @@ output/
           <target-role>/
             star-<target-role>-en.*
             star-<target-role>-id.*
+        application/
+          <target-role>/
+            cover-letter-<target-role>-en.*
+            email-application-<target-role>-en.*
+            email-follow-up-<target-role>-en.*
+        platform/
+          <target-role>/
+            upwork.md
+            linkedin.md
+            glints.md
 ```
 
 Generated candidate inputs and outputs are ignored by Git by default.
@@ -78,7 +94,14 @@ The script creates a candidate run folder and prints a prompt that can be pasted
 Render Markdown outputs to DOCX and PDF:
 
 ```bash
-python scripts/render_outputs.py output/candidates/<candidate>/<run-id>/cv/<role>/cv-<candidate>-<role>-en.md
+# Render a specific CV variant
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md
+
+# Render final report, salary market analysis, STAR interview prep, and application package
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.md
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/salary/<role>/salary-market-<role>.md
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/interview/<role>/star-<role>-en.md
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/application/<role>/cover-letter-<role>-en.md
 ```
 
 ## Quality Standard

@@ -28,27 +28,47 @@ You will receive a structured CV from Agent 00 output, and optionally a target r
 
 ## Evaluation Dimensions
 
-### 1. JD / Market Alignment Score
+### 1. Previous CV Role Match
+How close was the original / pre-rewrite CV to the target role before any tailoring?
+
+This score must be shown as a percentage for each target role. It is not the same as final CV quality. It answers the user's practical question: "Dari CV sebelumnya, match ke role ini berapa persen?"
+
+Score based on:
+- Must-have requirement coverage
+- Relevant experience evidence
+- Role-native keywords already present
+- Achievement/result visibility
+- Tools/domain match
+- Market credibility for the candidate's level
+
+Use this interpretation:
+- 0-30%: Weak match — target likely fails screening without repositioning or portfolio proof
+- 31-50%: Partial match — some signals exist, but role fit is not obvious
+- 51-70%: Moderate match — plausible target with focused rewriting and gap handling
+- 71-85%: Strong match — good fit, needs tailoring and proof polishing
+- 86-100%: Very strong match — already close to ready, mostly optimization
+
+### 2. JD / Market Alignment Score
 How well does the CV match what's being asked for in the target role?
 
 **If JD provided:** Direct keyword and requirement matching (0–100%)
 **If no JD:** Compare against industry-standard requirements for inferred role
 
-### 2. Career Narrative Coherence
+### 3. Career Narrative Coherence
 Does the progression of roles tell a logical, upward story?
 - Linear progression: each role builds on the last ✅
 - Unexplained lateral moves: needs framing ⚠️
 - Obvious career pivot: needs a strong summary to bridge ⚠️
 - Gaps that look like stagnation: flag ❌
 
-### 3. Competitive Positioning
+### 4. Competitive Positioning
 Given the candidate's profile, how competitive are they for the target role?
 - What is the typical candidate profile for this role? (years of experience, education, skills)
 - Where does this candidate stand vs typical applicants?
 - What is their strongest differentiator?
 - What is their biggest liability?
 
-### 4. Gap Analysis
+### 5. Gap Analysis
 What is missing that would significantly improve chances?
 - Hard skills gaps (specific tools, technologies, methodologies)
 - Soft skills visibility gaps (leadership, communication, cross-functional work)
@@ -57,12 +77,12 @@ What is missing that would significantly improve chances?
 
 Rank gaps as: Critical (likely disqualifier) / Important (reduces score) / Minor (nice to have)
 
-### 5. Market Demand Assessment
+### 6. Market Demand Assessment
 - Is the target role in high, moderate, or low demand right now?
 - What is the salary range for this role in the candidate's target market?
 - Are there adjacent roles with higher demand that this candidate should also target?
 
-### 6. Positioning Strategy
+### 7. Positioning Strategy
 - How should this candidate position themselves to maximize callback rate?
 - Should they target large enterprise, startup, or government/public sector?
 - Geographic market recommendation (local, national, international/remote)?
@@ -94,6 +114,13 @@ Rank gaps as: Critical (likely disqualifier) / Important (reduces score) / Minor
 - Target: {role name}
 - Source: {User-provided / Inferred from CV / JD-based}
 - Confidence: {High / Medium / Low}
+
+### Previous CV Role Match / Kecocokan CV Lama dengan Role
+| Target Role | Previous CV Match | Interpretation | Main Missing Signals |
+|-------------|------------------|----------------|----------------------|
+| {role} | XX% | Weak / Partial / Moderate / Strong / Very Strong | {missing evidence, keyword, tool, achievement, domain proof} |
+
+**Important / Penting:** This is the match score of the original CV before rewriting, not the expected score after tailoring.
 
 ### JD Alignment / Kesesuaian dengan JD
 | Requirement | Present in CV | Strength |

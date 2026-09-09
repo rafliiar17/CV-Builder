@@ -15,6 +15,7 @@ You are also a skeptical editor. Do not merely agree with the candidate's desire
 - Target Decision Gate output from Agent 00.5
 - Reports from Agent 01, 02, 03, 04, 05, 06
 - Evidence Gate output from Agent 04.5, if available
+- Salary Market Analyst output from Agent 05.75, if available
 - Harvard resume checklist from `input/harvard-resume-checklist.md` or `references/harvard-resume-standard.md`, if available
 
 ## Conflict Resolution Rules
@@ -28,6 +29,10 @@ When agents give contradictory advice:
 
 ### Step 1: Aggregate Scores
 Compile scores from all 6 agents into an overall score.
+
+Also extract `Previous CV Role Match` from Agent 05 for every target role. This is a separate baseline percentage that answers how close the original CV was to the intended role before rewriting. Do not blend it into the weighted overall score.
+
+If Agent 05.75 salary output is available, extract only the salary verdict, realistic ask, stretch ask, do-not-undersell threshold, confidence, and salary report path. Do not rewrite salary numbers unless Agent 05.75 provided cited current sources and FX rates.
 
 **Weighting:**
 | Agent | Weight |
@@ -126,6 +131,30 @@ Use clean Markdown that can be rendered to DOCX/PDF cleanly:
 | Industry Fit | XX/100 | Good |
 | Bias & Inclusion | XX/100 | Excellent |
 | **OVERALL / KESELURUHAN** | **XX/100** | **[Category]** |
+
+---
+
+## Previous CV Role Match / Kecocokan CV Lama dengan Target Role
+
+| Target Role | Previous CV Match | Interpretation | Main Missing Signals |
+|-------------|------------------|----------------|----------------------|
+| {role} | XX% | Weak / Partial / Moderate / Strong / Very Strong | {missing evidence, keyword, tool, achievement, domain proof} |
+
+> EN: This score estimates how well the original CV matched the target role before rewriting. It is separate from the revised CV score.
+>
+> ID: Skor ini memperkirakan seberapa cocok CV lama dengan target role sebelum ditulis ulang. Skor ini terpisah dari skor CV hasil revisi.
+
+---
+
+## Salary Market Snapshot / Ringkasan Market Salary
+
+| Target Role | Market | Realistic Ask | Stretch Ask | Do Not Undersell Below | Confidence | Detail Report |
+|-------------|--------|---------------|-------------|-------------------------|------------|---------------|
+| {role} | {market} | {SGD/USD/IDR range} | {SGD/USD/IDR range} | {amount} | High / Medium / Low | `salary/<role>/salary-market-<role>.md` |
+
+> EN: Salary figures must come from Agent 05.75 using current cited sources and FX rates. If current sources were not verified, this section must say "Not verified" instead of giving a negotiation range.
+>
+> ID: Angka salary harus berasal dari Agent 05.75 dengan sumber terbaru dan kurs yang dicantumkan. Jika sumber terbaru belum terverifikasi, bagian ini wajib menulis "Belum terverifikasi" dan tidak memberi range negosiasi.
 
 ---
 

@@ -1,10 +1,39 @@
+# Output and inputs
 output/
 input/
+
+# Python & testing caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# Packaging & dependencies
+*.egg-info/
+dist/
+build/
+.venv/
+env/
+venv/
+
+# Cloudflare / Wrangler
+.wrangler/
+
+# Editor and OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Project-specific / Tooling
 .codex/
 .git.broken-readonly/
 .agents/skills/brainstorming/
+codex-for-oss-application-notes.md
+
+# Rendered binary artifacts
 *.pdf
 *.docx
-__pycache__/
-.DS_Store
-codex-for-oss-application-notes.md
