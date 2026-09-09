@@ -223,8 +223,8 @@ def update_profile_metadata(
             continue
 
         data = json.loads(json_path.read_text(encoding="utf-8"))
-        hero = data.get("hero", {})
-        existing_repo = hero.get("cvRepository", [])
+        settings = data.get("settings", {})
+        existing_repo = settings.get("cvRepository", [])
         existing_folders = {item.get("folder") for item in existing_repo}
 
         for r in synced_roles:
@@ -246,8 +246,14 @@ def update_profile_metadata(
                 existing_repo.append(entry)
                 existing_folders.add(r.r2_folder)
 
-        hero["cvRepository"] = existing_repo
-        data["hero"] = hero
+        settings["cvRepository"] = existing_repo
+        data["settings"] = settings
+
+        # Clean up legacy hero.cvRepository if it exists
+        if "hero" in data and isinstance(data["hero"], dict):
+            data["hero"].pop("cvRepository", None)
+            if not data["hero"]:
+                data.pop("hero", None)
 
         if dry_run:
             print(f"  [DRY-RUN] Update cvRepository in {json_path.relative_to(profile_dir)}")
