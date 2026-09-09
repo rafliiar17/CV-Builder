@@ -119,31 +119,110 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-## Quick Start
+## End-to-End User Guide (How to Create or Review a CV)
 
-### 1. Initialize a review run
-Using the unified CLI:
+Follow this complete step-by-step guide after cloning this repository to review an existing CV or generate an ATS-ready CV from scratch.
+
+### Step 1: Initialize Your Candidate Workspace
+
+You have two ways to prepare your input data:
+
+#### Option A — You have an existing CV (PDF / DOCX) `[Recommended]`
+Run the unified CLI to initialize your run directory and automatically extract text & links:
 ```bash
-python3 scripts/cli.py init "Candidate Name" /path/to/cv.pdf --roles "Data Analyst, Application Support" --projects /path/to/projects-list.md
+python3 scripts/cli.py init "Your Full Name" /path/to/your-cv.pdf --roles "Target Role 1, Target Role 2" --projects /path/to/projects-list.md
 ```
-Or via the classic shell script:
+*(Or use the shell helper: `scripts/review-cv "Your Full Name" /path/to/your-cv.pdf --roles "Target Role 1, Target Role 2"`)*
+
+This automated command:
+1. Creates an isolated candidate directory: `output/candidates/<candidate-slug>/<run-id>/`.
+2. Extracts plain text and links from your PDF/DOCX into `input/extracted.txt`.
+3. Prepares `input/target-brief.md` with your chosen target roles and market strategy.
+4. Sets up `input/projects-list.md` to link project portfolio evidence.
+5. Updates `LATEST.md` to point to this newest run.
+
+#### Option B — Building from Scratch (No Existing CV)
+If you don't have an existing CV file:
+1. Create your candidate folder manually:
+   ```bash
+   mkdir -p output/candidates/your-name/$(date +%Y-%m-%d)-target-role/input
+   ```
+2. Copy the standardized input template:
+   ```bash
+   cp templates/cv-input-form.md output/candidates/your-name/$(date +%Y-%m-%d)-target-role/input/extracted.txt
+   ```
+3. Open `extracted.txt` and fill in your education, work history, tech skills, and projects.
+4. Create `input/target-brief.md` specifying your target roles (e.g. `Data Analyst, Application Support`).
+
+---
+
+### Step 2: Run the Multi-Agent Pipeline
+
+CV Brainstormer uses an 18-agent roster defined under `.agents/skills/cv-brainstormer/agents/`. You can execute the workflow using your preferred AI environment:
+
+#### 🤖 Method 1: AI Coding Assistant (Antigravity, Claude Code, Cursor, Codex) — Recommended
+Open this repository in your AI agent and prompt it:
+> *"Run the CV-Brainstormer workflow for candidate directory `output/candidates/<candidate-slug>/<run-id>/` targeting the role `[Target Role]`. Execute Agent 00 through Agent 11, enforcing the Evidence Gate (04.5), Harvard Resume Standard (09), and Anti-Slop writing rules (`no-ai-slop`)."*
+
+The agent will read `.agents/skills/cv-brainstormer/SKILL.md` and orchestrate the full pipeline:
+- **Phase 1 (Diagnosis & Target Gate)**: Agents 00, 00.25, and 00.5 normalize text, diagnose true role level, and lock targets.
+- **Phase 2 (Specialist Deep Audit)**: Agents 01–06 run parallel checks (ATS score, HR 6s scan, tech stack, achievements, JD match %, bias).
+- **Phase 3 (Evidence & Strategy Gates)**: Agent 04.5 filters overclaims, Agent 05.5 suggests adjacent career paths, and Agent 05.75 analyzes live market salaries (SGD, USD, IDR).
+- **Phase 4 (Human CV Tailoring)**: Agent 07 writes a baseline CV, Agent 08 tailors role variants (`-en` and `-id`), and Agent 08.5 maps portfolio proof.
+- **Phase 5 (Verification & Delivery)**: Agent 09 runs the Harvard Standard Gate (`Pass`/`Minor Issues`/`Needs Revision`), Agent 10 builds STAR interview banks, and Agent 11 writes application packages (cover letters, emails, Upwork/LinkedIn copy).
+
+#### 💻 Method 2: Terminal Scripting (Claude Code CLI)
+You can pipe commands directly via Claude Code in terminal:
 ```bash
-scripts/review-cv "Candidate Name" /path/to/cv.pdf --roles "Data Analyst, Application Support" --projects /path/to/projects-list.md
+RUN_DIR="output/candidates/<candidate-slug>/<run-id>"
+AGENTS_DIR=".agents/skills/cv-brainstormer/agents"
+
+# Step 00: Extract & Normalize
+claude -p "$(cat ${AGENTS_DIR}/00-extractor.md)" < "${RUN_DIR}/input/extracted.txt" > "${RUN_DIR}/scratch/00-structured-cv.md"
+
+# (See references/runner-guide.md for the complete script across all 18 agents)
 ```
 
-The CLI creates the candidate run folder, extracts CV text & links, copies templates, and prepares the input directory.
+#### 🌐 Method 3: Web UI (Claude.ai Projects / ChatGPT)
+1. Create a Project in Claude or Custom GPT in ChatGPT.
+2. Upload `.agents/skills/cv-brainstormer/agents/` and `references/harvard-resume-standard.md` as Knowledge.
+3. Paste the contents of `input/extracted.txt` and run step-by-step following `references/runner-guide.md`.
 
-### 2. Compile Documents to DOCX & PDF
-Render all deliverable documents (CVs, reports, salary analysis, interview prep, cover letters, platforms) using MarkForge:
+---
+
+### Step 3: Review Your Deliverables
+
+Once the pipeline completes, your results are saved in `output/candidates/<candidate-slug>/<run-id>/`:
+- 📊 **`reports/final-report-bilingual.md`**: Full diagnostic review, ATS score breakdown, and recruiter impressions (ID + EN).
+- 📄 **`cv/<target-role>/`**:
+  - `cv-<candidate_file_slug>-<target-role>-en.md` (English CV for global/multinational/remote jobs).
+  - `cv-<candidate_file_slug>-<target-role>-id.md` (Indonesian CV for local companies/government/vendors).
+- 💰 **`salary/<target-role>/salary-market-<target-role>.md`**: Real-time salary benchmark with live citations converted to SGD, USD, and IDR.
+- 🎯 **`interview/<target-role>/star-<target-role>-en.md`**: Role-specific STAR interview answers with strict boundaries against overclaiming.
+- ✉️ **`application/<target-role>/`**: Tailored cover letter, application email, and follow-up email.
+- 🌐 **`platform/<target-role>/`**: Platform-optimized profiles and proposals for LinkedIn, Upwork, and Glints.
+
+> [!IMPORTANT]
+> **Check the Harvard Gate in `reports/delta-report-bilingual.md`**:
+> Confirm that Agent 09 marked the CV as **`Pass`** or **`Minor Issues`**. If it marked **`Needs Revision`**, review the unverified claims flagged before sending the CV to recruiters.
+
+---
+
+### Step 4: Compile to PDF & DOCX
+
+Convert the verified Markdown documents into beautifully styled, ATS-safe PDF and DOCX files using MarkForge:
+
 ```bash
-# Compile entire candidate run directory
+# Compile all generated files in the candidate run folder:
 python3 scripts/cli.py render output/candidates/<candidate-slug>/<run-id>/
 
-# Or compile a single document
+# Or compile an individual CV:
 python3 scripts/cli.py render output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md
 ```
 
-### 3. Audit ATS Compliance
+### Step 5: Run Final ATS Audit
+
+Verify keyword compliance and layout safety directly from your terminal:
 ```bash
 python3 scripts/cli.py audit output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md
 ```
