@@ -44,10 +44,10 @@ Update these prompts:
 - `01-ats-scanner.md`: add scan-friendly, PDF-safe, recognizable sections, abbreviation clarity, and contact visibility checks.
 - `02-hr-first-impression.md`: add "express, not impress" tone checks, anti-flowery language, anti-generic AI phrasing, and fast-scan readability.
 - `04-achievement-auditor.md`: add bullet quality standard: action, context, qualified or quantified result, defensible scope.
-- `04-evidence-gate.md`: connect factual language to evidence level and require downgrade wording for unsupported claims.
+- `04.5-evidence-gate.md`: connect factual language to evidence level and require downgrade wording for unsupported claims.
 - `07-synthesizer.md`: require the Harvard layer in final report, priority fixes, and revised CV writing.
 - `08-role-tailor.md`: require tailoring without keyword stuffing, overclaiming, or making the candidate sound like a different person.
-- `09-delta-verifier.md`: add a `Harvard Resume Standard Check` section with `Pass / Minor Issues / Needs Revision`.
+- `09-final-verifier.md`: add a `Harvard Resume Standard Check` section with `Pass / Minor Issues / Needs Revision`.
 
 ### Update Orchestration Docs
 

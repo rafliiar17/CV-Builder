@@ -132,9 +132,9 @@ claude -p "$(cat ${AGENTS_DIR}/00-extractor.md)" < "${RUN_DIR}/input/extracted.t
   > "${RUN_DIR}/scratch/00-structured-cv.md"
 
 # Step 00.25 & 00.5: Role Discovery & Target Decision Gate
-claude -p "$(cat ${AGENTS_DIR}/00-role-discovery-interviewer.md)" < "${RUN_DIR}/scratch/00-structured-cv.md" \
+claude -p "$(cat ${AGENTS_DIR}/00.25-role-discovery-interviewer.md)" < "${RUN_DIR}/scratch/00-structured-cv.md" \
   > "${RUN_DIR}/scratch/00-role-discovery.md"
-claude -p "$(cat ${AGENTS_DIR}/00-target-decision-gate.md)" < "${RUN_DIR}/scratch/00-role-discovery.md" \
+claude -p "$(cat ${AGENTS_DIR}/00.5-target-decision-gate.md)" < "${RUN_DIR}/scratch/00-role-discovery.md" \
   > "${RUN_DIR}/scratch/00-target-decision.md"
 
 # Steps 01–06: Parallel specialist reviews
@@ -145,11 +145,11 @@ done
 wait
 
 # Step 04.5, 05.5, 05.75: Evidence, Adjacent Roles, Salary Intelligence
-claude -p "$(cat ${AGENTS_DIR}/04-evidence-gate.md)" < "${RUN_DIR}/scratch/step-04-report.md" \
+claude -p "$(cat ${AGENTS_DIR}/04.5-evidence-gate.md)" < "${RUN_DIR}/scratch/step-04-report.md" \
   > "${RUN_DIR}/scratch/step-04.5-evidence.md"
-claude -p "$(cat ${AGENTS_DIR}/05-adjacent-role-strategist.md)" < "${RUN_DIR}/scratch/step-05-report.md" \
+claude -p "$(cat ${AGENTS_DIR}/05.5-adjacent-role-strategist.md)" < "${RUN_DIR}/scratch/step-05-report.md" \
   > "${RUN_DIR}/scratch/step-05.5-adjacent.md"
-claude -p "$(cat ${AGENTS_DIR}/05-salary-market-analyst.md)" < "${RUN_DIR}/scratch/step-05.5-adjacent.md" \
+claude -p "$(cat ${AGENTS_DIR}/05.75-salary-market-analyst.md)" < "${RUN_DIR}/scratch/step-05.5-adjacent.md" \
   > "${RUN_DIR}/salary/data-analyst/salary-market-data-analyst.md"
 
 # Step 07: Synthesizer
@@ -161,11 +161,11 @@ claude -p "$(cat ${AGENTS_DIR}/08-role-tailor.md)" < "${RUN_DIR}/reports/final-r
   > "${RUN_DIR}/cv/data-analyst/cv-rafli_arraafi-data-analyst-en.md"
 
 # Step 08.5: Portfolio Mapper
-claude -p "$(cat ${AGENTS_DIR}/08-portfolio-mapper.md)" < "${RUN_DIR}/input/projects-list.md" \
+claude -p "$(cat ${AGENTS_DIR}/08.5-portfolio-mapper.md)" < "${RUN_DIR}/input/projects-list.md" \
   > "${RUN_DIR}/portfolio/projects-from-list.md"
 
 # Step 09: Final Verifier (Harvard Check)
-claude -p "$(cat ${AGENTS_DIR}/09-delta-verifier.md)" < "${RUN_DIR}/cv/data-analyst/cv-rafli_arraafi-data-analyst-en.md" \
+claude -p "$(cat ${AGENTS_DIR}/09-final-verifier.md)" < "${RUN_DIR}/cv/data-analyst/cv-rafli_arraafi-data-analyst-en.md" \
   > "${RUN_DIR}/reports/delta-report-bilingual.md"
 
 # Step 10: STAR Interview Coach
@@ -233,21 +233,21 @@ python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/app
 | Agent | Prompt File | Input | Output Deliverables |
 |---|---|---|---|
 | **00 Extractor** | `00-extractor.md` | Raw CV (PDF/DOCX/text) | `scratch/00-structured-cv.md` |
-| **00.25 Role Discovery** | `00-role-discovery-interviewer.md` | Structured CV + history | Diagnostic role classification & true level |
-| **00.5 Target Gate** | `00-target-decision-gate.md` | Discovery output + target brief | Locked target roles, market, single/dual track |
+| **00.25 Role Discovery** | `00.25-role-discovery-interviewer.md` | Structured CV + history | Diagnostic role classification & true level |
+| **00.5 Target Gate** | `00.5-target-decision-gate.md` | Discovery output + target brief | Locked target roles, market, single/dual track |
 | **01 ATS Scanner** | `01-ats-scanner.md` | Structured CV | ATS score, formatting errors, keyword density |
 | **02 HR Impression** | `02-hr-first-impression.md` | Structured CV | 6-second scan, tone, red flags |
 | **03 Tech Reviewer** | `03-tech-stack-reviewer.md` | Structured CV | Stack credibility, outdated tech, market demand |
 | **04 Achievement Auditor** | `04-achievement-auditor.md` | Structured CV | Responsibility vs Achievement ratio, STAR quantification |
-| **04.5 Evidence Gate** | `04-evidence-gate.md` | Tech & Achievement reports | Claim classification (proven/project/risky/remove) |
+| **04.5 Evidence Gate** | `04.5-evidence-gate.md` | Tech & Achievement reports | Claim classification (proven/project/risky/remove) |
 | **05 Industry Analyst** | `05-industry-analyst.md` | Structured CV + target JD | Industry fit, previous CV role match % |
-| **05.5 Adjacent Roles** | `05-adjacent-role-strategist.md` | Industry & Evidence outputs | Recommended adjacent roles & feasibility bands |
-| **05.75 Salary Analyst** | `05-salary-market-analyst.md` | Decision, Strategy & Market data | `salary/<role>/salary-market-<role>.md` (SGD/USD/IDR) |
+| **05.5 Adjacent Roles** | `05.5-adjacent-role-strategist.md` | Industry & Evidence outputs | Recommended adjacent roles & feasibility bands |
+| **05.75 Salary Analyst** | `05.75-salary-market-analyst.md` | Decision, Strategy & Market data | `salary/<role>/salary-market-<role>.md` (SGD/USD/IDR) |
 | **06 Bias Checker** | `06-bias-checker.md` | Structured CV | Privacy scan, bias signals, inclusive language |
 | **07 Synthesizer** | `07-synthesizer.md` | All 00–06.x outputs | `reports/final-report-bilingual.md` + baseline CV |
 | **08 Role Tailor** | `08-role-tailor.md` | Baseline CV + Target role | `cv/<role>/cv-<slug>-<role>-en.md` & `-id.md` |
-| **08.5 Portfolio Mapper** | `08-portfolio-mapper.md` | `input/projects-list.md` + Roles | `portfolio/projects-from-list.md` (proof & gaps) |
-| **09 Final Verifier** | `09-delta-verifier.md` | Tailored CV + previous scores | `reports/delta-report-bilingual.md` (Harvard Gate) |
+| **08.5 Portfolio Mapper** | `08.5-portfolio-mapper.md` | `input/projects-list.md` + Roles | `portfolio/projects-from-list.md` (proof & gaps) |
+| **09 Final Verifier** | `09-final-verifier.md` | Tailored CV + previous scores | `reports/delta-report-bilingual.md` (Harvard Gate) |
 | **10 STAR Coach** | `10-star-interview-coach.md` | Verified CV + Evidence Gate | `interview/<role>/star-<role>-en.md` & `-id.md` |
 | **11 Application Writer** | `11-application-package-writer.md` | Verified CV + Target context | `application/<role>/` (cover letters, emails) & `platform/<role>/` (Upwork, LinkedIn, Glints) |
 

@@ -77,31 +77,38 @@ output/
             upwork.md
             linkedin.md
             glints.md
+            threads.md
 ```
 
 Generated candidate inputs and outputs are ignored by Git by default.
 
 ## Quick Start
 
-Initialize a review run:
-
+### 1. Initialize a review run
+Using the unified CLI:
+```bash
+python3 scripts/cli.py init "Candidate Name" /path/to/cv.pdf --roles "Data Analyst, Application Support" --projects /path/to/projects-list.md
+```
+Or via the classic shell script:
 ```bash
 scripts/review-cv "Candidate Name" /path/to/cv.pdf --roles "Data Analyst, Application Support" --projects /path/to/projects-list.md
 ```
 
-The script creates a candidate run folder and prints a prompt that can be pasted back into Codex or another compatible agent runner.
+The CLI creates the candidate run folder, extracts CV text & links, copies templates, and prepares the input directory.
 
-Render Markdown outputs to DOCX and PDF:
-
+### 2. Compile Documents to DOCX & PDF
+Render all deliverable documents (CVs, reports, salary analysis, interview prep, cover letters, platforms) using MarkForge:
 ```bash
-# Render a specific CV variant
-python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md
+# Compile entire candidate run directory
+python3 scripts/cli.py render output/candidates/<candidate-slug>/<run-id>/
 
-# Render final report, salary market analysis, STAR interview prep, and application package
-python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.md
-python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/salary/<role>/salary-market-<role>.md
-python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/interview/<role>/star-<role>-en.md
-python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/application/<role>/cover-letter-<role>-en.md
+# Or compile a single document
+python3 scripts/cli.py render output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md
+```
+
+### 3. Audit ATS Compliance
+```bash
+python3 scripts/cli.py audit output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md
 ```
 
 ## Quality Standard

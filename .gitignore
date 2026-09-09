@@ -30,9 +30,8 @@ Thumbs.db
 
 # Project-specific / Tooling
 .codex/
-.git.broken-readonly/
-.agents/skills/brainstorming/
-codex-for-oss-application-notes.md
+# Archived drafts
+docs/archive/
 
 # Rendered binary artifacts
 *.pdf

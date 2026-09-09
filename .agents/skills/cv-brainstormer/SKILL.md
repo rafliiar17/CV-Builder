@@ -75,12 +75,12 @@ scripts/review-cv "Rafli Arraafi" CV_Rafli_Arraafi_ID.pdf --roles "Data Analyst,
 Read `agents/00-extractor.md` and normalize the input CV into a structured format.
 
 ### Step 2.25 — Run Agent 00.25 (Role Discovery Interviewer)
-Read `agents/00-role-discovery-interviewer.md`. Start from the CV: first classify the candidate's general domain, initial role family, level, and any mismatch between their official title and actual work. Then ask universal and domain-specific diagnostic questions as appropriate.
+Read `agents/00.25-role-discovery-interviewer.md`. Start from the CV: first classify the candidate's general domain, initial role family, level, and any mismatch between their official title and actual work. Then ask universal and domain-specific diagnostic questions as appropriate.
 
 This agent must work for both general and tech candidates. Do not force tech-specific questions on non-tech candidates. For tech/support candidates, the agent must differentiate L1, L2, L3, Production Support, Application Support, SQL/Data Support, Manual QA, SysAdmin, and DevOps based on actual work evidence, not company-assigned titles.
 
 ### Step 2.5 — Run Agent 00.5 (Target Decision Gate)
-Read `agents/00-target-decision-gate.md`. Determine the primary target, secondary target, market, output language, single/dual-track strategy, and what should be downplayed or removed from the CV.
+Read `agents/00.5-target-decision-gate.md`. Determine the primary target, secondary target, market, output language, single/dual-track strategy, and what should be downplayed or removed from the CV.
 
 Use Agent 00.25 output as the primary source of truth when there is a conflict between title and actual work.
 
@@ -100,7 +100,7 @@ Also use the Harvard checklist from `input/harvard-resume-checklist.md` if avail
 Agent 05 must calculate a `Previous CV Role Match` for each target role from the original/pre-rewrite CV. This is the baseline match percentage of the old CV against the target role/JD, not the final CV score.
 
 ### Step 3.5 — Run Agent 04.5 (Evidence Gate)
-Read `agents/04-evidence-gate.md`. Classify claims, skills, projects, and metrics as:
+Read `agents/04.5-evidence-gate.md`. Classify claims, skills, projects, and metrics as:
 - Proven
 - Project-backed
 - Exposure
@@ -111,7 +111,7 @@ Read `agents/04-evidence-gate.md`. Classify claims, skills, projects, and metric
 Claims with a Risky/Remove status must not appear as strong claims in the final CV.
 
 ### Step 3.75 — Run Agent 05.5 (Adjacent Role Strategist)
-Read `agents/05-adjacent-role-strategist.md`. This agent recommends the closest realistic positions based on:
+Read `agents/05.5-adjacent-role-strategist.md`. This agent recommends the closest realistic positions based on:
 - Target title and the candidate's title history
 - Job description if available, or current market requirements if no JD is provided
 - The candidate's genuinely proven achievements
@@ -120,7 +120,7 @@ Read `agents/05-adjacent-role-strategist.md`. This agent recommends the closest 
 This agent may reject or downgrade the user's target role if evidence is insufficient, and then provide a more realistic alternative path.
 
 ### Step 3.875 — Run Agent 05.75 (Salary Market Analyst)
-Read `agents/05-salary-market-analyst.md`. For each target role that survives Agent 05.5, analyze current compensation ranges by market, level, and work model.
+Read `agents/05.75-salary-market-analyst.md`. For each target role that survives Agent 05.5, analyze current compensation ranges by market, level, and work model.
 
 This agent must:
 - Use live/current salary references at generation time.
@@ -148,7 +148,7 @@ Use insights from Agent 05 (Industry Analyst) about relevant roles, or ask the *
 Spawn parallel subagents if available, or run locally, to read instructions in `agents/08-role-tailor.md` and adapt the CV output from Agent 07 to align with each target role. Generate *separate files* per role and language using the candidate file slug with underscores, e.g. `cv-rafli_arraafi-data-analyst-en.md` and `cv-rafli_arraafi-data-analyst-id.md`.
 
 ### Step 5.5 — Run Agent 08.5 (Portfolio Mapper)
-Read `agents/08-portfolio-mapper.md`. Map the user's real projects to target roles, determine which projects to feature, which to downplay, and what portfolio artifacts are missing (README, screenshot, SQL snippet, demo, or mockup).
+Read `agents/08.5-portfolio-mapper.md`. Map the user's real projects to target roles, determine which projects to feature, which to downplay, and what portfolio artifacts are missing (README, screenshot, SQL snippet, demo, or mockup).
 
 ### Step 6 — Render Output (optional, requires Python)
 ```bash
@@ -158,7 +158,7 @@ python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/cv/
 Generates `.docx` and `.pdf` from the report and various CV variants.
 
 ### Step 7 — Run Agent 09 (Final Verifier)
-Read `agents/09-delta-verifier.md`. Run **two parallel subagents** (re-run Agent 01 + Agent 04) against the CV variant to verify, e.g. `output/candidates/<candidate-slug>/<run-id>/cv/general/cv-<candidate_file_slug>-revised-en.md` or `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-<candidate_file_slug>-data-analyst-en.md`, then run the Delta Synthesizer which reads:
+Read `agents/09-final-verifier.md`. Run **two parallel subagents** (re-run Agent 01 + Agent 04) against the CV variant to verify, e.g. `output/candidates/<candidate-slug>/<run-id>/cv/general/cv-<candidate_file_slug>-revised-en.md` or `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/cv-<candidate_file_slug>-data-analyst-en.md`, then run the Delta Synthesizer which reads:
 - Original scores from Agent 07
 - Re-run results from Agent 01 & 04
 - Priority Fix List from Agent 07 (to verify which items have been applied)
@@ -230,21 +230,21 @@ Upwork packages must include `Upwork Service Match` as an estimated percentage o
 | File | Agent | Domain |
 |------|-------|--------|
 | `agents/00-extractor.md` | Extractor | Normalizes CV into a structured format |
-| `agents/00-role-discovery-interviewer.md` | Role Discovery Interviewer | Determines actual role family and level via diagnostic questions when title/target role are misaligned |
-| `agents/00-target-decision-gate.md` | Target Decision Gate | Determines target role, market, language, and strategy before analysis |
+| `agents/00.25-role-discovery-interviewer.md` | Role Discovery Interviewer | Determines actual role family and level via diagnostic questions when title/target role are misaligned |
+| `agents/00.5-target-decision-gate.md` | Target Decision Gate | Determines target role, market, language, and strategy before analysis |
 | `agents/01-ats-scanner.md` | ATS Scanner | ATS compliance, keyword density, formatting |
 | `agents/02-hr-first-impression.md` | HR First Impression | 6-second scan, tone, red flags |
 | `agents/03-tech-stack-reviewer.md` | Tech Stack Reviewer | Skill credibility, market relevance, web search |
 | `agents/04-achievement-auditor.md` | Achievement Auditor | STAR method, action verbs, quantification |
-| `agents/04-evidence-gate.md` | Evidence Gate | Verifies claim evidence for skills, projects, and metrics to prevent overclaiming |
+| `agents/04.5-evidence-gate.md` | Evidence Gate | Verifies claim evidence for skills, projects, and metrics to prevent overclaiming |
 | `agents/05-industry-analyst.md` | Industry Analyst | JD alignment, gap analysis, competitive positioning |
-| `agents/05-adjacent-role-strategist.md` | Adjacent Role Strategist | Recommends closest positions based on title, JD/market requirements, and achievements |
-| `agents/05-salary-market-analyst.md` | Salary Market Analyst | Current salary range research, source validation, SGD/USD/IDR conversion, and negotiation positioning |
+| `agents/05.5-adjacent-role-strategist.md` | Adjacent Role Strategist | Recommends closest positions based on title, JD/market requirements, and achievements |
+| `agents/05.75-salary-market-analyst.md` | Salary Market Analyst | Current salary range research, source validation, SGD/USD/IDR conversion, and negotiation positioning |
 | `agents/06-bias-checker.md` | Bias & Inclusion Checker | Unnecessary personal info, privacy, inclusive language |
 | `agents/07-synthesizer.md` | Synthesizer / Human CV Writer | Compiles all outputs → priority list + revised CV with human copywriting |
 | `agents/08-role-tailor.md` | Role Tailor / Copywriter | Adapts CV content for specific roles/positions naturally and defensibly |
-| `agents/08-portfolio-mapper.md` | Portfolio Mapper | Maps real projects to roles and identifies portfolio gaps |
-| `agents/09-delta-verifier.md` | Final Verifier | Re-runs ATS + Achievement, checks role fit, evidence risk, interview defensibility, portfolio completeness |
+| `agents/08.5-portfolio-mapper.md` | Portfolio Mapper | Maps real projects to roles and identifies portfolio gaps |
+| `agents/09-final-verifier.md` | Final Verifier | Re-runs ATS + Achievement, checks role fit, evidence risk, interview defensibility, portfolio completeness |
 | `agents/10-star-interview-coach.md` | STAR Interview Coach | Creates role-specific STAR interview story bank from verified CV claims |
 | `agents/11-application-package-writer.md` | Application Package Writer | Creates cover letters, application emails, follow-up emails, and one platform file per channel (Upwork, LinkedIn, Glints) |
 

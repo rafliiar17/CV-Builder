@@ -50,21 +50,21 @@ CV-Brainstormer/
 │           ├── SKILL.md         # Skill definition & invocation steps
 │           ├── agents/          # 18 specialist agent prompt files
 │           │   ├── 00-extractor.md
-│           │   ├── 00-role-discovery-interviewer.md
-│           │   ├── 00-target-decision-gate.md
+│           │   ├── 00.25-role-discovery-interviewer.md
+│           │   ├── 00.5-target-decision-gate.md
 │           │   ├── 01-ats-scanner.md
 │           │   ├── 02-hr-first-impression.md
 │           │   ├── 03-tech-stack-reviewer.md
 │           │   ├── 04-achievement-auditor.md
-│           │   ├── 04-evidence-gate.md
+│           │   ├── 04.5-evidence-gate.md
 │           │   ├── 05-industry-analyst.md
-│           │   ├── 05-adjacent-role-strategist.md
-│           │   ├── 05-salary-market-analyst.md
+│           │   ├── 05.5-adjacent-role-strategist.md
+│           │   ├── 05.75-salary-market-analyst.md
 │           │   ├── 06-bias-checker.md
 │           │   ├── 07-synthesizer.md
 │           │   ├── 08-role-tailor.md
-│           │   ├── 08-portfolio-mapper.md
-│           │   ├── 09-delta-verifier.md
+│           │   ├── 08.5-portfolio-mapper.md
+│           │   ├── 09-final-verifier.md
 │           │   ├── 10-star-interview-coach.md
 │           │   └── 11-application-package-writer.md
 │           └── references/      # Architecture, runner guide & Harvard standards
@@ -94,11 +94,11 @@ CV-Brainstormer/
 
 ### Agent 00.25 — Role Discovery Interviewer
 - **Role**: Mengidentifikasi kesenjangan antara judul resmi, target peran, dan pekerjaan riil sehari-hari melalui pertanyaan diagnostik universal dan domain-spesifik.
-- **File**: `agents/00-role-discovery-interviewer.md`
+- **File**: `agents/00.25-role-discovery-interviewer.md`
 
 ### Agent 00.5 — Target Decision Gate
 - **Role**: Menentukan dan mengunci target peran primer, target sekunder, pasar geografis sasaran, bahasa output, serta strategi single/dual-track sebelum analisis mendalam dimulai.
-- **File**: `agents/00-target-decision-gate.md`
+- **File**: `agents/00.5-target-decision-gate.md`
 
 ### Agent 01 — ATS Scanner
 - **Role**: Mengevaluasi keterbacaan mesin Applicant Tracking System, kepadatan kata kunci, tata letak, format tanggal, dan section headers yang kompatibel.
@@ -118,7 +118,7 @@ CV-Brainstormer/
 
 ### Agent 04.5 — Evidence Gate
 - **Role**: Mengklasifikasikan setiap klaim keterampilan dan pencapaian ke dalam 6 tingkat bukti: `Proven`, `Project-backed`, `Exposure`, `Learning`, `Risky`, atau `Remove`. Klaim berisiko wajib diturunkan atau dihapus dari CV final.
-- **File**: `agents/04-evidence-gate.md`
+- **File**: `agents/04.5-evidence-gate.md`
 
 ### Agent 05 — Industry Analyst
 - **Role**: Menganalisis kesesuaian target role/JD, menghitung persentase `Previous CV Role Match` dari CV orisinal, serta memetakan kesenjangan kompetensi kandidat.
@@ -126,11 +126,11 @@ CV-Brainstormer/
 
 ### Agent 05.5 — Adjacent Role Strategist
 - **Role**: Merekomendasikan alternatif peran paling realistis berdasarkan riwayat karier, kebutuhan pasar/JD, dan bukti pencapaian nyata (mengklasifikasikan ke dalam: Apply Now, Minor Tailoring, After Portfolio Proof, Long-Term, Do Not Target).
-- **File**: `agents/05-adjacent-role-strategist.md`
+- **File**: `agents/05.5-adjacent-role-strategist.md`
 
 ### Agent 05.75 — Salary Market Analyst
 - **Role**: Melakukan riset mendalam terhadap rentang kompensasi pasar terkini untuk target peran dan geografi. Wajib mengonversi rentang gaji ke SGD, USD, dan IDR menggunakan kurs terkini, mencantumkan sitasi sumber terpercaya (Hays, Michael Page, Levels.fyi, NodeFlair) dengan tanggal akses, serta merumuskan posisi negosiasi (realistic, stretch, walk-away).
-- **File**: `agents/05-salary-market-analyst.md`
+- **File**: `agents/05.75-salary-market-analyst.md`
 
 ### Agent 06 — Bias & Inclusion Checker
 - **Role**: Memeriksa data pribadi yang tidak perlu (usia, agama, status pernikahan, foto) dan menegakkan bahasa inklusif serta perlindungan privasi kandidat.
@@ -146,11 +146,11 @@ CV-Brainstormer/
 
 ### Agent 08.5 — Portfolio Mapper
 - **Role**: Memetakan proyek nyata kandidat dari `projects-list.md` ke target peran dan mengidentifikasi bukti yang masih kurang (README, skrinsut UI, cuplikan query SQL, demo interaktif).
-- **File**: `agents/08-portfolio-mapper.md`
+- **File**: `agents/08.5-portfolio-mapper.md`
 
 ### Agent 09 — Final Verifier
 - **Role**: Memvalidasi ulang skor ATS & pencapaian, menghitung `Role Match Delta`, dan mengevaluasi kepatuhan terhadap Harvard Resume Standard (`Pass`, `Minor Issues`, `Needs Revision`).
-- **File**: `agents/09-delta-verifier.md`
+- **File**: `agents/09-final-verifier.md`
 
 ### Agent 10 — STAR Interview Coach
 - **Role**: Menyusun bank cerita wawancara STAR (Situation, Task, Action, Result) per peran target berdasarkan bukti nyata CV, dilengkapi antisipasi pertanyaan sulit dan batasan klaim (*what not to overclaim*).

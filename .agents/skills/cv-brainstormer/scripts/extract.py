@@ -14,11 +14,10 @@ Examples:
     python3 scripts/extract.py output/candidates/rafli-arraafi/2026-06-01/input/original-cv.pdf
 """
 
-import sys
-import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import zipfile
 from pathlib import Path
@@ -234,8 +233,8 @@ def extract_docx(filepath: str) -> str:
 
     if unseen_links:
         text_parts.append("\n[Detected Document Links]")
-        for l in unseen_links:
-            text_parts.append(f"- <{l}>")
+        for link_url in unseen_links:
+            text_parts.append(f"- <{link_url}>")
 
     return "\n".join(text_parts)
 
