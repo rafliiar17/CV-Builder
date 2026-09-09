@@ -1,301 +1,274 @@
 # CV Brainstormer — Design Spec
-**Date:** 2026-05-31  
-**Status:** Draft — Pending User Review  
-**Author:** Brainstorming Session (Rafzz × Claude)
+**Date:** 2026-09-09  
+**Status:** Active Architecture Reference  
+**Author:** CV Brainstormer Core Architecture Team
 
 ---
 
 ## 1. Overview
 
-CV Brainstormer adalah sistem multi-subagent yang menganalisis CV secara mendalam dari berbagai perspektif profesional, menghasilkan laporan komprehensif, dan memproduksi versi CV yang sudah diperbaiki dalam format `.md`, `.docx`, dan `.pdf`.
+CV Brainstormer adalah sistem multi-agent (18 specialist & gate agents: Agents 00–11 beserta 00.25, 00.5, 04.5, 05.5, 05.75, dan 08.5) yang menganalisis, mengkritisi, menyempurnakan, dan men-tailor Curriculum Vitae (CV) secara mendalam dari berbagai perspektif profesional.
 
-Sistem ini bersifat **platform-agnostic** — dapat dijalankan di Claude, Codex, Kiro, Antigravity, atau AI agent runner lainnya karena semua agent didefinisikan sebagai prompt file Markdown.
+Sistem ini tidak sekadar membuat resume terdengar bombastis. Sebaliknya, sistem ini menegakkan verifikasi bukti (*evidence gate*), menyelaraskan peran nyata vs judul resmi (*role discovery*), menganalisis kompensasi pasar terkini (*salary intelligence* dalam SGD, USD, dan IDR), memetakan portofolio teknis, menyiapkan bank cerita wawancara STAR, serta memproduksi paket aplikasi kerja global (cover letter, application email, follow-up) dan profil platform terpadu (Upwork, LinkedIn, Glints).
+
+Sistem ini bersifat **platform-agnostic** — setiap agent didefinisikan sebagai file instruksi Markdown mandiri di `.agents/skills/cv-brainstormer/agents/` dan dapat dijalankan di berbagai runtime (Claude, Claude Code, Codex, Antigravity, Kiro).
 
 ---
 
 ## 2. Goals
 
-- Menganalisis CV dari 6 perspektif specialist secara mendalam
-- Menghasilkan report yang actionable, bukan sekadar generic feedback
-- Memproduksi CV revised draft yang siap dipakai
-- Generalis — bisa handle semua industri, bukan hanya IT
-- Dua jalur input: upload file existing CV atau isi dari nol via form
+- **18-Agent Comprehensive Pipeline**: Menganalisis CV secara holistik dari sudut pandang ATS, HR, stack teknis, pencapaian STAR, kesesuaian industri, bias/inklusivitas, riset gaji, strategi peran terdekat, dan verifikasi kualitas.
+- **Evidence-Safe & Defensible**: Mengklasifikasikan klaim kandidat (proven, project-backed, exposure, learning, risky, remove) agar semua klaim pada CV final dapat dipertanggungjawabkan saat wawancara teknis.
+- **Role Discovery & Conflict Resolution**: Mendiagnosis peran dan level sebenarnya kandidat ketika jabatan resmi perusahaan tidak mencerminkan pekerjaan riil sehari-hari.
+- **Bilingual & Language Separation**: Laporan analitis dwibahasa (Indonesia + English), sementara berkas CV dipisahkan per bahasa (`-en` untuk ATS/multinasional/remote, `-id` untuk pasar lokal/BUMN/vendor).
+- **Salary Market Intelligence**: Menyediakan estimasi rentang gaji pasar yang akurat dengan sitasi sumber terpercaya terkini dan konversi wajib ke SGD, USD, dan IDR.
+- **Application & Freelance Packaging**: Menghasilkan materi lamaran siap pakai (cover letter, email aplikasi, email follow-up) serta strategi platform terpadu untuk LinkedIn, Glints, dan Upwork (berbasis pemecahan masalah klien, bukan CV dump).
+- **Candidate & Run Isolation**: Mengelompokkan input dan seluruh artefak output per kandidat dan per run (`output/candidates/<candidate-slug>/<run-id>/`) untuk mencegah tabrakan data.
+- **Harvard Resume Standard Gate**: Menerapkan standar Harvard sebagai *light gate* verifikasi (`Pass`, `Minor Issues`, `Needs Revision`).
 
 ---
 
 ## 3. Non-Goals
 
-- Bukan job board / job matching platform
-- Tidak menyimpan data user (stateless per run)
-- Tidak auto-apply ke lowongan
+- Bukan platform auto-apply atau automated job scraper.
+- Bukan database penyimpanan permanen kredensial kandidat (stateless per candidate run folder).
+- Tidak memalsukan atau menggelembungkan (*inflate*) pencapaian, angka metrik, atau teknologi yang tidak pernah disentuh kandidat.
 
 ---
 
 ## 4. Project Structure
 
-```
-cv-brainstormer/
-├── agents/
-│   ├── 00-extractor.md          # Normalize input → plain structured text
-│   ├── 01-ats-scanner.md        # ATS compliance specialist
-│   ├── 02-hr-first-impression.md # HR 6-second rule specialist
-│   ├── 03-tech-stack-reviewer.md # Tech relevance specialist
-│   ├── 04-achievement-auditor.md # STAR/quantifiable achievement specialist
-│   ├── 05-industry-analyst.md   # Market fit & JD alignment specialist
-│   ├── 06-bias-checker.md       # Inclusive language specialist
-│   └── 07-synthesizer.md        # Compile all → final report + revised CV
+```text
+CV-Brainstormer/
+├── AGENTS.md                    # Master agent orchestrator & specialist roster reference
+├── GEMINI.md                    # AI runtime instructions & global directives
+├── README.md                    # Public project documentation & quick start
+├── SUB-AGENTS.md                # Orchestration workflow & output contracts
+├── .agents/
+│   └── skills/
+│       └── cv-brainstormer/
+│           ├── SKILL.md         # Skill definition & invocation steps
+│           ├── agents/          # 18 specialist agent prompt files
+│           │   ├── 00-extractor.md
+│           │   ├── 00.25-role-discovery-interviewer.md
+│           │   ├── 00.5-target-decision-gate.md
+│           │   ├── 01-ats-scanner.md
+│           │   ├── 02-hr-first-impression.md
+│           │   ├── 03-tech-stack-reviewer.md
+│           │   ├── 04-achievement-auditor.md
+│           │   ├── 04.5-evidence-gate.md
+│           │   ├── 05-industry-analyst.md
+│           │   ├── 05.5-adjacent-role-strategist.md
+│           │   ├── 05.75-salary-market-analyst.md
+│           │   ├── 06-bias-checker.md
+│           │   ├── 07-synthesizer.md
+│           │   ├── 08-role-tailor.md
+│           │   ├── 08.5-portfolio-mapper.md
+│           │   ├── 09-final-verifier.md
+│           │   ├── 10-star-interview-coach.md
+│           │   └── 11-application-package-writer.md
+│           └── references/      # Architecture, runner guide & Harvard standards
+│               ├── design-spec.md
+│               ├── runner-guide.md
+│               └── harvard-resume-standard.md
 ├── templates/
-│   ├── cv-input-form.md         # Form terstruktur untuk input dari nol
-│   └── report-template.md       # Skeleton output report
-├── input/
-│   └── .gitkeep                 # User taruh CV di sini (PDF/DOCX/MD)
-├── output/
-│   └── .gitkeep                 # Report hasil (.md, .docx, .pdf)
+│   ├── cv-input-form.md         # Form input dari nol
+│   └── report-template.md       # Skeleton laporan output
 ├── scripts/
-│   ├── extract.py               # PDF/DOCX → plain text extractor
-│   └── render.py                # .md → .docx + .pdf converter
-├── runner.md                    # Instruksi cara jalanin di berbagai platform
-└── README.md
+│   ├── review-cv                # Bash runner untuk inisialisasi candidate run
+│   └── render_outputs.py        # Markdown → DOCX & PDF renderer
+└── output/
+    └── candidates/
+        └── <candidate-slug>/
+            ├── LATEST.md
+            └── <run-id>/        # Direktori artefak run terisolasi
 ```
 
 ---
 
-## 5. Agent Definitions
+## 5. Agent Definitions (18-Agent Roster)
 
 ### Agent 00 — Extractor
-**Role:** Normalisasi input CV menjadi format terstruktur yang konsisten sebelum dilempar ke agent lain.
+- **Role**: Normalisasi input teks mentah (dari file PDF/DOCX atau form) menjadi Markdown terstruktur standar (`[PERSONAL INFO]`, `[SUMMARY]`, `[EXPERIENCE]`, `[EDUCATION]`, `[SKILLS]`, `[PROJECTS]`).
+- **File**: `agents/00-extractor.md`
 
-**Input:** Raw CV text (dari file extract atau form isian)  
-**Output:** Structured CV dalam format standar:
-```
-[PERSONAL INFO] [SUMMARY] [EXPERIENCE] [EDUCATION] [SKILLS] [CERTIFICATIONS] [PROJECTS] [OTHERS]
-```
-**Knowledge domain:** Text parsing, CV section identification, deduplication, encoding cleanup.
+### Agent 00.25 — Role Discovery Interviewer
+- **Role**: Mengidentifikasi kesenjangan antara judul resmi, target peran, dan pekerjaan riil sehari-hari melalui pertanyaan diagnostik universal dan domain-spesifik.
+- **File**: `agents/00.25-role-discovery-interviewer.md`
 
----
+### Agent 00.5 — Target Decision Gate
+- **Role**: Menentukan dan mengunci target peran primer, target sekunder, pasar geografis sasaran, bahasa output, serta strategi single/dual-track sebelum analisis mendalam dimulai.
+- **File**: `agents/00.5-target-decision-gate.md`
 
 ### Agent 01 — ATS Scanner
-**Role:** Mengevaluasi CV dari perspektif Applicant Tracking System.
-
-**Knowledge domain:**
-- ATS parsing rules (section headers yang dikenali, format yang aman)
-- Keyword density analysis — apakah skills dan role keywords muncul cukup
-- Format compliance: bullet points, date format, file encoding
-- Hal-hal yang merusak ATS: tabel, kolom multi-kolom, header/footer, gambar, ikon
-- Section order yang optimal untuk ATS
-
-**Output section:** `## ATS Compliance` dengan skor 0-100 + temuan spesifik
-
----
+- **Role**: Mengevaluasi keterbacaan mesin Applicant Tracking System, kepadatan kata kunci, tata letak, format tanggal, dan section headers yang kompatibel.
+- **File**: `agents/01-ats-scanner.md`
 
 ### Agent 02 — HR First Impression
-**Role:** Mensimulasikan HR yang membaca CV dalam 6 detik pertama.
-
-**Knowledge domain:**
-- Visual hierarchy dan scannability
-- Tone profesional vs terlalu kaku / terlalu casual
-- Personal branding — apakah ada "hook" yang bikin penasaran
-- Summary/objective quality — apakah langsung to the point
-- Red flags yang bikin HR langsung skip
-- Length appropriateness (fresh grad vs senior berbeda)
-
-**Output section:** `## First Impression Analysis` dengan temuan + saran konkret
-
----
+- **Role**: Mensimulasikan pemindaian 6 detik pertama oleh HR/recruiter, mengevaluasi hierarki visual, nada profesional, dan mendeteksi red flags.
+- **File**: `agents/02-hr-first-impression.md`
 
 ### Agent 03 — Tech Stack Reviewer
-**Role:** Menilai relevansi dan kredibilitas skills yang tercantum.
-
-**Knowledge domain:**
-- Validasi skills berdasarkan konteks pengalaman (jangan claim sesuatu yang tidak ada proyeknya)
-- Skills yang outdated vs in-demand di market saat ini
-- Perbedaan "familiar with" vs "proficient in" vs "expert in" — framing yang tepat
-- Stack consistency — apakah skills yang disebutkan koheren dengan role dan pengalaman
-- Missing skills yang seharusnya ada untuk target role
-- Versi tools yang sebaiknya disebutkan (misal "Docker" vs "Docker + Compose + Swarm")
-
-**Output section:** `## Tech Stack Assessment` dengan gap analysis + rekomendasi
-
----
+- **Role**: Memvalidasi kredibilitas teknologi, mendeteksi teknologi usang (misal CentOS EOL), memverifikasi versi tools, dan mengecek permintaan pasar terkini via web search.
+- **File**: `agents/03-tech-stack-reviewer.md`
 
 ### Agent 04 — Achievement Auditor
-**Role:** Mengaudit kualitas penulisan pengalaman kerja.
+- **Role**: Mengaudit rasio tanggung jawab vs pencapaian (*Responsibility vs Achievement ratio*), kekuatan kata kerja tindakan (*action verbs*), dan kuantifikasi dampak menggunakan metode STAR.
+- **File**: `agents/04-achievement-auditor.md`
 
-**Knowledge domain:**
-- STAR method (Situation, Task, Action, Result)
-- Action verbs yang kuat vs lemah (misal "helped with" vs "architected", "led", "reduced")
-- Quantifiable results — angka, persentase, skala, dampak bisnis
-- Responsibility framing vs Achievement framing (mayoritas CV terjebak di responsibility)
-- Bullet point structure yang optimal
-- Tense consistency (past role = past tense, current = present)
-
-**Output section:** `## Achievement Quality` dengan contoh sebelum/sesudah per bullet point
-
----
+### Agent 04.5 — Evidence Gate
+- **Role**: Mengklasifikasikan setiap klaim keterampilan dan pencapaian ke dalam 6 tingkat bukti: `Proven`, `Project-backed`, `Exposure`, `Learning`, `Risky`, atau `Remove`. Klaim berisiko wajib diturunkan atau dihapus dari CV final.
+- **File**: `agents/04.5-evidence-gate.md`
 
 ### Agent 05 — Industry Analyst
-**Role:** Menganalisis kesesuaian CV dengan demand pasar dan target role.
+- **Role**: Menganalisis kesesuaian target role/JD, menghitung persentase `Previous CV Role Match` dari CV orisinal, serta memetakan kesenjangan kompetensi kandidat.
+- **File**: `agents/05-industry-analyst.md`
 
-**Knowledge domain:**
-- Trend hiring di berbagai industri
-- Keyword alignment dengan job description umum di target role
-- Gap analysis — apa yang kurang untuk bisa lolos screening
-- Competitive positioning — apa yang membedakan kandidat ini
-- Jika user provide target JD: direct alignment scoring
-- Jika tidak: analisis berdasarkan current role dan implied target
+### Agent 05.5 — Adjacent Role Strategist
+- **Role**: Merekomendasikan alternatif peran paling realistis berdasarkan riwayat karier, kebutuhan pasar/JD, dan bukti pencapaian nyata (mengklasifikasikan ke dalam: Apply Now, Minor Tailoring, After Portfolio Proof, Long-Term, Do Not Target).
+- **File**: `agents/05.5-adjacent-role-strategist.md`
 
-**Output section:** `## Industry Fit Analysis` dengan alignment score + gap list
-
----
+### Agent 05.75 — Salary Market Analyst
+- **Role**: Melakukan riset mendalam terhadap rentang kompensasi pasar terkini untuk target peran dan geografi. Wajib mengonversi rentang gaji ke SGD, USD, dan IDR menggunakan kurs terkini, mencantumkan sitasi sumber terpercaya (Hays, Michael Page, Levels.fyi, NodeFlair) dengan tanggal akses, serta merumuskan posisi negosiasi (realistic, stretch, walk-away).
+- **File**: `agents/05.75-salary-market-analyst.md`
 
 ### Agent 06 — Bias & Inclusion Checker
-**Role:** Mendeteksi elemen yang bisa memicu unconscious bias atau dinilai tidak profesional.
+- **Role**: Memeriksa data pribadi yang tidak perlu (usia, agama, status pernikahan, foto) dan menegakkan bahasa inklusif serta perlindungan privasi kandidat.
+- **File**: `agents/06-bias-checker.md`
 
-**Knowledge domain:**
-- Sinyal usia (tahun lulus, tahun pengalaman pertama)
-- Sinyal gender dari bahasa yang digunakan
-- Foto di CV — konteks regional (beberapa negara tidak prefer foto)
-- Informasi yang tidak perlu: agama, status pernikahan, nomor KTP, dll
-- Bahasa yang eksklusif vs inklusif
-- Nama & cultural markers — relevansi untuk target market (lokal vs internasional)
+### Agent 07 — Synthesizer / Human CV Writer
+- **Role**: Mengompilasi laporan dwibahasa komprehensif, menyelesaikan konflik antar-agent, dan menulis draf CV baseline dengan gaya copywriting manusiawi, aktif, faktual, dan aman dari overclaiming.
+- **File**: `agents/07-synthesizer.md`
 
-**Output section:** `## Bias & Inclusion Check` dengan flag list + alasan
+### Agent 08 — Role Tailor / Copywriter
+- **Role**: Mengadaptasi CV baseline untuk setiap peran spesifik yang disetujui, menghasilkan berkas terpisah untuk versi bahasa Inggris (`-en.md`) dan bahasa Indonesia (`-id.md`).
+- **File**: `agents/08-role-tailor.md`
 
----
+### Agent 08.5 — Portfolio Mapper
+- **Role**: Memetakan proyek nyata kandidat dari `projects-list.md` ke target peran dan mengidentifikasi bukti yang masih kurang (README, skrinsut UI, cuplikan query SQL, demo interaktif).
+- **File**: `agents/08.5-portfolio-mapper.md`
 
-### Agent 07 — Synthesizer
-**Role:** Mengompilasi semua output agent, membuat priority ranking, dan menghasilkan CV revised draft.
+### Agent 09 — Final Verifier
+- **Role**: Memvalidasi ulang skor ATS & pencapaian, menghitung `Role Match Delta`, dan mengevaluasi kepatuhan terhadap Harvard Resume Standard (`Pass`, `Minor Issues`, `Needs Revision`).
+- **File**: `agents/09-final-verifier.md`
 
-**Knowledge domain:**
-- Weighting feedback berdasarkan severity (blocker vs nice-to-have)
-- Conflict resolution antar agent (jika ada saran yang bertentangan)
-- CV rewriting berdasarkan semua feedback
-- Menjaga voice/tone asli user saat rewriting
+### Agent 10 — STAR Interview Coach
+- **Role**: Menyusun bank cerita wawancara STAR (Situation, Task, Action, Result) per peran target berdasarkan bukti nyata CV, dilengkapi antisipasi pertanyaan sulit dan batasan klaim (*what not to overclaim*).
+- **File**: `agents/10-star-interview-coach.md`
 
-**Output:**
-1. Executive Summary (3-5 poin paling kritis)
-2. Priority Fix List (ranked: Critical → High → Medium → Low)
-3. Full revised CV draft siap pakai
-
----
-
-## 6. Input Flow
-
-### Jalur A — Upload File Existing CV
-```
-User taruh file di /input/
-→ scripts/extract.py jalankan ekstraksi
-→ Output: /input/extracted.txt
-→ Lempar ke Agent 00 (Extractor) untuk normalisasi
-→ Lanjut ke 6 specialist agents
-```
-
-### Jalur B — Form Terstruktur (dari nol)
-```
-User isi /templates/cv-input-form.md
-→ Langsung ke Agent 00 (Extractor) untuk normalisasi
-→ Lanjut ke 6 specialist agents
-```
-
-### Paralel Processing
-Setelah Agent 00 selesai, Agent 01-06 bisa dijalankan **paralel** (tidak ada dependency antar agent). Agent 07 (Synthesizer) hanya jalan setelah semua agent 01-06 selesai.
+### Agent 11 — Application Package Writer
+- **Role**: Menghasilkan materi lamaran pekerjaan global/remote (cover letter, email aplikasi, email follow-up) serta satu file profil terpadu per saluran platform (`upwork.md`, `linkedin.md`, `glints.md`). Pada Upwork, fokus pada positioning jasa, pemecahan masalah klien, deliverable, dan proposal hooks.
+- **File**: `agents/11-application-package-writer.md`
 
 ---
 
-## 7. Output Flow
+## 6. End-to-End Orchestration Flow
 
-```
-Agent 07 Synthesizer output → /output/report-YYYY-MM-DD.md
-→ scripts/render.py → /output/report-YYYY-MM-DD.docx
-→ scripts/render.py → /output/report-YYYY-MM-DD.pdf
-
-CV Revised Draft → /output/cv-revised-YYYY-MM-DD.md
-→ scripts/render.py → /output/cv-revised-YYYY-MM-DD.docx
-→ scripts/render.py → /output/cv-revised-YYYY-MM-DD.pdf
-```
-
----
-
-## 8. Report Template Structure
-
-```markdown
-# CV Brainstormer Report
-**Generated:** {date}
-**CV Owner:** {name}
-**Target Role:** {role atau "General"}
-
----
-
-## Executive Summary
-> 3-5 poin paling kritis yang harus difix sekarang
-
-## Priority Fix List
-### 🔴 Critical
-### 🟠 High  
-### 🟡 Medium
-### 🟢 Low (Nice to have)
-
----
-
-## Detailed Analysis
-
-### 1. ATS Compliance [Score: XX/100]
-### 2. First Impression Analysis
-### 3. Tech Stack Assessment
-### 4. Achievement Quality
-### 5. Industry Fit Analysis [Score: XX/100]
-### 6. Bias & Inclusion Check
-
----
-
-## CV Revised Draft
-> Versi CV yang sudah diperbaiki berdasarkan semua feedback di atas
+```text
+Input CV (PDF/DOCX/Form)
+  │
+  ▼
+[Agent 00: Extractor] ──► scratch/00-structured-cv.md
+  │
+  ▼
+[Agent 00.25: Role Discovery] ──► Klasifikasi peran riil & level
+  │
+  ▼
+[Agent 00.5: Target Decision Gate] ──► Kunci target role, market & strategi
+  │
+  ├──────────────────────────────────────────────────────┐
+  │ Parallel Execution                                   │
+  ▼                                                      ▼
+[Agents 01-06: ATS, HR, Tech, Achievement, Industry, Bias]
+  │
+  ▼
+[Agent 04.5: Evidence Gate] ──► Filter klaim Risky/Remove
+  │
+  ▼
+[Agent 05.5: Adjacent Role Strategist] ──► Rekomendasi peran terdekat
+  │
+  ▼
+[Agent 05.75: Salary Market Analyst] ──► salary/<role>/salary-market-<role>.md (SGD/USD/IDR)
+  │
+  ▼
+[Agent 07: Synthesizer] ──► reports/final-report-bilingual.md + Baseline CV
+  │
+  ▼
+[Agent 08: Role Tailor] ──► cv/<role>/cv-<slug>-<role>-en.md & -id.md
+  │
+  ▼
+[Agent 08.5: Portfolio Mapper] ──► portfolio/projects-from-list.md
+  │
+  ▼
+[Agent 09: Final Verifier] ──► reports/delta-report-bilingual.md (Harvard Gate)
+  │
+  ▼
+[Agent 10: STAR Coach] ──► interview/<role>/star-<role>-en.md & -id.md
+  │
+  ▼
+[Agent 11: Application Writer] ──► application/<role>/ & platform/<role>/ (Upwork/LinkedIn/Glints)
+  │
+  ▼
+[scripts/render_outputs.py] ──► Dokumen cetak .docx & .pdf
 ```
 
 ---
 
-## 9. Runner Instructions (Multi-Platform)
+## 7. Output Folder Contract
 
-File `runner.md` akan berisi instruksi cara menjalankan sistem ini di:
-- **Claude:** copy-paste agent prompt satu per satu, atau gunakan Projects
-- **Codex:** instruksi sebagai task file
-- **Kiro:** sebagai spec/task definition
-- **Antigravity:** sebagai agent pipeline config
-- **Manual/Custom:** urutan eksekusi dan cara passing output antar agent
+Setiap run kandidat diisolasi secara ketat dalam hirarki berikut:
+
+```text
+output/
+  candidates/
+    <candidate-slug>/
+      LATEST.md
+      <run-id>/
+        input/
+          original-cv.pdf
+          extracted.txt
+          projects-list.md
+          target-brief.md
+        scratch/
+        reports/
+          final-report-bilingual.*
+        salary/
+          <target-role>/
+            salary-market-<target-role>.*
+        cv/
+          <target-role>/
+            cv-<candidate_file_slug>-<target-role>-en.*
+            cv-<candidate_file_slug>-<target-role>-id.*
+        portfolio/
+          projects-from-list.*
+        interview/
+          <target-role>/
+            star-<target-role>-en.*
+            star-<target-role>-id.*
+        application/
+          <target-role>/
+            cover-letter-<target-role>-en.*
+            email-application-<target-role>-en.*
+            email-follow-up-<target-role>-en.*
+        platform/
+          <target-role>/
+            upwork.md
+            linkedin.md
+            glints.md
+```
 
 ---
 
-## 10. Scripts
+## 8. Quality & Formatting Mandates
 
-### `extract.py`
-- Library: `pdfplumber` (PDF) + `python-docx` (DOCX)
-- Input: file path
-- Output: `/input/extracted.txt`
-
-### `render.py`
-- Library: `markdown` + `weasyprint` (PDF) + `python-docx` (DOCX)
-- Input: `.md` file path
-- Output: `.docx` dan `.pdf` di `/output/`
+1. **Harvard Resume Standard**: Semua output CV harus memenuhi prinsip ringkas, terfokus, berbasis hasil/fakta terukur, bebas dari kata ganti orang pertama (I, me, my), tanpa grafik/tabel kompleks, dan diformat ATS-safe.
+2. **Bilingual Separation**: Laporan hasil review dwibahasa; file CV dibuat terpisah per bahasa. Tidak mencampur bahasa Inggris dan Indonesia dalam satu CV.
+3. **Salary Data Freshness**: Sitasi wajib menyertakan URL/sumber resmi, tanggal riset, dan tanggal kurs valuta asing (SGD, USD, IDR).
+4. **Upwork Positioning**: Khusus profil Upwork (`platform/<target-role>/upwork.md`), gunakan penawaran berbasis jasa/solusi bisnis klien, bukan ringkasan resume formal.
 
 ---
 
-## 11. Decisions (Resolved)
+## 9. Automation Scripts
 
-- [x] **Target JD:** Optional input. Agent 05 inferensi dari CV terlebih dahulu; minta klarifikasi dari user hanya jika target role ambigu atau tidak dapat disimpulkan.
-- [x] **Bahasa report:** Bilingual — Indonesia + English (section terpisah per bahasa, atau label dual-language per temuan).
-- [x] **Web search:** Agent 03 (Tech Stack Reviewer) diizinkan melakukan web search untuk validasi market demand dan relevansi skills terkini.
-- [x] **Scoring:** Numerik (0–100) + label kategori: Poor (0–40) / Fair (41–60) / Good (61–80) / Excellent (81–100).
-
----
-
-## 12. Future Enhancements (Out of Scope v1)
-
-- Web UI / artifact interaktif
-- Integrasi langsung dengan job board (LinkedIn, Jobstreet, Glints)
-- Version history CV
-- Multi-language CV generation
-- Cover letter generator
-
----
-
-*Spec ini subject to revision setelah user review.*
+- **`scripts/review-cv`**: Menginisialisasi folder run baru, menyalin file input, mengekstrak teks, membuat `target-brief.md`, memperbarui `LATEST.md`, dan menampilkan prompt eksekusi awal.
+- **`scripts/render_outputs.py`**: Mengonversi file Markdown artefak menjadi berkas dokumen Word (`.docx`) dan Adobe PDF (`.pdf`) berkualitas tinggi dengan penanganan styling ATS profesional.

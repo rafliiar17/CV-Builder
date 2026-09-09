@@ -1,6 +1,6 @@
 # AGENTS.md - Specialist Agents Reference
 
-This project utilizes a multi-agent CV workflow with core agents (00-10) plus strategic gate agents (00.25, 00.5, 04.5, 08.5) to prevent generic, overclaimed, or role-misaligned CVs.
+This project utilizes a multi-agent CV workflow with core agents (00-11) plus strategic gate agents (00.25, 00.5, 04.5, 05.75, 08.5) to prevent generic, overclaimed, underpriced, or role-misaligned CVs.
 
 ## Main Orchestrator (You)
 You are the master agent. Your job is to extract the input, orchestrate the specialists below, tailor outputs to the user's target roles, and render final documents in a manageable folder structure.
@@ -23,6 +23,9 @@ output/
         scratch/
         reports/
           final-report-bilingual.*
+        salary/
+          <target-role>/
+            salary-market-<target-role>.*
         cv/
           <target-role>/
             cv-<candidate_file_slug>-<target-role>-en.*
@@ -33,6 +36,17 @@ output/
           <target-role>/
             star-<target-role>-en.*
             star-<target-role>-id.*
+        application/
+          <target-role>/
+            cover-letter-<target-role>-en.*
+            email-application-<target-role>-en.*
+            email-follow-up-<target-role>-en.*
+        platform/
+          <target-role>/
+            upwork.md
+            linkedin.md
+            glints.md
+            threads.md
 ```
 
 Use English CVs for ATS-heavy portals, startups, multinational companies, and LinkedIn/JobStreet applications. Use Indonesian CVs for local/government/vendor roles that expect Bahasa Indonesia.
@@ -57,12 +71,14 @@ Current example run:
 | **04.5** | **Evidence Gate** | Classifies claims as proven, project-backed, exposure, learning, risky, or remove before writing. |
 | **05** | **Industry Analyst** | Assesses JD alignment, gap analysis, and identifies alternative career paths/roles. |
 | **05.5** | **Adjacent Role Strategist** | Recommends closest realistic roles by analyzing target title, JD/market requirements, and candidate achievements. |
+| **05.75** | **Salary Market Analyst** | Deep-reviews current salary ranges for the target role/market, cites reliable fresh sources, converts ranges to SGD, USD, and IDR, and states negotiation positioning. |
 | **06** | **Bias Checker** | Scans for unnecessary personal info (age, religion, photo) and inclusive language. |
 | **07** | **Synthesizer / Human CV Writer** | Compiles reports, resolves conflicts, and writes a human, role-aware, evidence-safe baseline CV. |
 | **08** | **Role Tailor / Copywriter** | Tailors the baseline CV to specific target roles with natural human copywriting and interview-defensible wording. |
 | **08.5** | **Portfolio Mapper** | Maps real projects to target roles and identifies portfolio gaps, screenshots, READMEs, demos, or SQL proof needed. |
 | **09** | **Final Verifier** | Re-runs ATS + achievement scoring and checks role fit, evidence risk, interview defensibility, portfolio completeness, and output structure. |
 | **10** | **STAR Interview Coach** | Converts verified CV claims, metrics, and evidence into role-specific STAR interview story banks. |
+| **11** | **Application Package Writer** | Creates short, role/company-aware cover letters, application emails, and one consolidated platform file per channel such as Upwork, LinkedIn, and Glints. |
 
 ## Critical Standards
 
@@ -75,9 +91,14 @@ Current example run:
 - Every strong claim must be interview-defensible.
 - STAR interview answers must be based on verified CV evidence and must include safe boundaries for what not to overclaim.
 - Adjacent role recommendations must be based on target title, job description or market requirements, and candidate achievements.
+- Agent 05 must include a `Previous CV Role Match` percentage for each target role before rewrite, so the candidate can see how close the original CV was to the target market.
+- Agent 05.75 must use current sources at generation time for salary ranges and FX conversion. It must cite source names/URLs, access date, market, role title, level, and confidence. If fresh references or exchange rates cannot be verified, it must say so and avoid presenting the salary range as current.
 - Private/internal projects must be described safely without implying public repository access or exposing confidential data.
 - If evidence is weak, downgrade wording instead of inflating the candidate.
 - Agent 09 must include a `Harvard Resume Standard Check` with `Pass`, `Minor Issues`, or `Needs Revision` before declaring a CV ready to send.
+- Agent 11 must not invent company research. If no company/JD context is provided, generate reusable but non-generic drafts with placeholders and clear customization notes.
+- Platform outputs must be consolidated into one file per platform, for example `upwork.md`, `linkedin.md`, and `glints.md`. Each platform file must include opportunity analysis, recommended positioning, profile copy, and platform-specific application/proposal content.
+- Upwork outputs must be service-positioned, not CV-positioned: focus on client problems, deliverables, proof, scope, turnaround, and proposal hooks. Do not use inflated expert claims unless evidence supports them.
 
 ## Instructions Location
 The specific prompts and detailed rubrics for each agent are stored in `.agents/skills/cv-brainstormer/agents/`. Do not duplicate them here.

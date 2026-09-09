@@ -93,7 +93,7 @@ target_slug="$(slugify "$roles")"
 run_id="${run_date}-${target_slug}"
 run_dir="output/candidates/${candidate_slug}/${run_id}"
 
-mkdir -p "${run_dir}/input" "${run_dir}/scratch" "${run_dir}/reports" "${run_dir}/cv" "${run_dir}/portfolio" "${run_dir}/interview"
+mkdir -p "${run_dir}/input" "${run_dir}/scratch" "${run_dir}/reports" "${run_dir}/salary" "${run_dir}/cv" "${run_dir}/portfolio" "${run_dir}/interview" "${run_dir}/application" "${run_dir}/platform"
 
 cv_ext="${cv_file##*.}"
 cp "$cv_file" "${run_dir}/input/original-cv.${cv_ext}"
@@ -119,6 +119,10 @@ Output strategy:
 - Create role-specific CV variants.
 - Create English and Indonesian CV variants unless the target decision gate says otherwise.
 - Name CV files as \`cv-${candidate_file_slug}-<target-role>-en.md\` and \`cv-${candidate_file_slug}-<target-role>-id.md\`.
+- Research current salary benchmarks in \`salary/<target-role>/\`.
+- Prepare STAR interview stories in \`interview/<target-role>/\`.
+- Create cover letter and email outreach in \`application/<target-role>/\`.
+- Create platform-specific packages in \`platform/<target-role>/\` (Upwork, LinkedIn, Glints).
 - Keep all outputs inside this run folder.
 
 Run folder:
@@ -209,9 +213,17 @@ fi
 cat <<EOF_PROMPT_END
 
 Ikuti workflow lengkap:
-Agent 00, Agent 00.25 Role Discovery Interviewer, Agent 00.5 Target Decision Gate, Agents 01-06, Agent 04.5 Evidence Gate, Agent 05.5 Adjacent Role Strategist, Agent 07 Synthesizer, Agent 08 Role Tailor, Agent 08.5 Portfolio Mapper, Agent 09 Final Verifier, dan Agent 10 STAR Interview Coach.
+Agent 00 Extractor, Agent 00.25 Role Discovery Interviewer, Agent 00.5 Target Decision Gate, Agents 01-06, Agent 04.5 Evidence Gate, Agent 05.5 Adjacent Role Strategist, Agent 05.75 Salary Market Analyst, Agent 07 Synthesizer, Agent 08 Role Tailor, Agent 08.5 Portfolio Mapper, Agent 09 Final Verifier, Agent 10 STAR Interview Coach, dan Agent 11 Application Package Writer.
 
 Gunakan Harvard resume checklist untuk memastikan CV tailored, spesifik, aktif, faktual, mudah discan, formatnya aman ATS, dan tidak overclaim. Agent 09 wajib menyertakan Harvard Resume Standard Check dengan status Pass, Minor Issues, atau Needs Revision.
+
+Pastikan struktur output per target role tersimpan lengkap di subfolder:
+- salary/<target-role>/salary-market-<target-role>.*
+- cv/<target-role>/cv-${candidate_file_slug}-<target-role>-en.* dan *-id.*
+- portfolio/projects-from-list.*
+- interview/<target-role>/star-<target-role>-en.* dan *-id.*
+- application/<target-role>/cover-letter-*, email-application-*, email-follow-up-*
+- platform/<target-role>/upwork.md, linkedin.md, glints.md
 
 Output wajib masuk ke:
 ${run_dir}
