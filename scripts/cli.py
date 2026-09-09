@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import argparse
 import datetime
-import os
 import re
 import shutil
 import subprocess
@@ -142,7 +141,7 @@ def cmd_init(args: argparse.Namespace) -> int:
 """
     (base_candidate_dir / "LATEST.md").write_text(latest_content, encoding="utf-8")
 
-    print(f"\n✔ Successfully initialized run directory:")
+    print("\n✔ Successfully initialized run directory:")
     print(f"  {run_dir}\n")
     print(f"Candidate:    {candidate_name} ({candidate_slug})")
     print(f"Target Roles: {args.roles}")
