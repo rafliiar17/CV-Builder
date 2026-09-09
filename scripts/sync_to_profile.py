@@ -90,9 +90,14 @@ ROLE_MAPPINGS: list[RoleMapping] = [
 ]
 
 
-def resolve_run_dir(candidate_slug: str, date_str: str | None = None) -> Path:
+def resolve_run_dir(
+    candidate_slug: str,
+    date_str: str | None = None,
+    base_dir: Path | None = None,
+) -> Path:
     """Find the target run directory for a candidate."""
-    candidate_dir = REPO_ROOT / "output" / "candidates" / candidate_slug
+    root = base_dir or REPO_ROOT
+    candidate_dir = root / "output" / "candidates" / candidate_slug
     if not candidate_dir.exists():
         raise FileNotFoundError(f"Candidate directory not found: {candidate_dir}")
 

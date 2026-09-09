@@ -22,10 +22,16 @@ def test_sync_script_help():
     assert "Sync CV-Brainstormer deliverables into profile-new" in res.stdout
 
 
-def test_resolve_run_dir():
-    run_dir = resolve_run_dir("rafli-arraafi")
-    assert run_dir.exists()
-    assert "2026-09-09" in str(run_dir)
+def test_resolve_run_dir(tmp_path: Path):
+    candidate_slug = "test-candidate"
+    fake_candidate_dir = tmp_path / "output" / "candidates" / candidate_slug
+    run_dir = fake_candidate_dir / "2026-09-09"
+    run_dir.mkdir(parents=True)
+    latest_file = fake_candidate_dir / "LATEST.md"
+    latest_file.write_text(f"output/candidates/{candidate_slug}/2026-09-09\n", encoding="utf-8")
+
+    res = resolve_run_dir(candidate_slug, base_dir=tmp_path)
+    assert res == run_dir
 
 
 def test_sync_files_and_metadata(tmp_path: Path):
