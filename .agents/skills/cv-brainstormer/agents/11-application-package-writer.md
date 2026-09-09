@@ -34,6 +34,7 @@ The package must feel written by a real candidate, not a template. It must be sp
 - Do not call the candidate an "expert", "top-rated", "senior", or "certified" freelancer unless evidence supports it.
 - If the candidate is new to Upwork, write as a credible practitioner entering the marketplace, not as an established Upwork freelancer.
 - Analyze which platform gives the candidate the best chance of getting jobs based on evidence, target role, proof of work, communication style, and market fit.
+- When application emails or proposals require salary expectations, reference Agent 05.75's 'realistic ask' and 'do-not-undersell' thresholds. If Agent 05.75 was not run, use placeholders: '[Salary expectation: See salary market analysis or discuss in interview]'.
 
 ## Output Location
 
@@ -63,7 +64,6 @@ Recommended platform files:
 - `upwork.md`
 - `linkedin.md`
 - `glints.md`
-- `threads.md`
 
 Only create files for platforms requested by the user or clearly relevant to the target market. Do not split one platform into multiple files.
 
@@ -158,6 +158,16 @@ Every platform file must start with opportunity analysis before copywriting:
 - Next proof to add: <portfolio/project/certification/screenshot/case study>
 ```
 
+### Platform Opportunity Scoring Criteria
+| Dimension | Weight | Definition |
+|---|---|---|
+| Platform fit | 25% | How well the candidate's role type and work model match the platform's primary market |
+| Profile readiness | 20% | Completeness of skills, overview/summary, work history, and profile photo/avatar |
+| Proof strength | 25% | Availability and quality of portfolio samples, case studies, live demos, or code repositories |
+| Search/discovery potential | 15% | Keyword relevance and density for platform search algorithms |
+| Application/conversion potential | 15% | Competitiveness of positioning, rate, and proposal quality for getting responses |
+| **Overall** | **100%** | **Weighted sum → 0-100 → category label** |
+
 ### LinkedIn File
 
 Save as `platform/<target-role>/linkedin.md`.
@@ -174,10 +184,6 @@ Save as `platform/<target-role>/linkedin.md`.
 
 ## About
 <2-4 short paragraphs, skimmable, human, evidence-safe>
-
-## Featured / Portfolio Suggestions
-- <project/proof item>: <why it supports this role>
-- <project/proof item>: <why it supports this role>
 
 ## Recruiter Search Keywords
 <comma-separated keyword list>
@@ -274,7 +280,7 @@ Save as `platform/<target-role>/upwork.md`.
 ### Upwork Proposal Template
 
 ```markdown
-# Upwork Proposal Template — <Target Service>
+## Proposal Templates
 
 ## General Proposal
 Hi <Client Name>,
@@ -298,7 +304,7 @@ Hi <Client Name>,
 ### Upwork Project Catalog
 
 ```markdown
-# Upwork Project Catalog — <Target Service>
+## Project Catalog
 
 ## Project Title Options
 1. <catalog title>
@@ -391,3 +397,14 @@ Before finalizing, verify:
 - Upwork Service Match is shown separately from CV/job role match.
 - Each platform is contained in a single file, not split into multiple files.
 - Each platform file explains whether that platform is a high, medium, or low opportunity channel for this candidate.
+
+## When NOT to Run
+- Skip if no verified CV exists from Agent 09.
+
+## Dependencies
+- **Receives from:** Agent 08, 09, 00.5, 04.5, 05, 08.5, 10
+- **Feeds into:** Final output for candidate
+
+## Changelog
+- v1.1 (2026-09-09): Added Platform Opportunity scoring rubric, removed deprecated platforms, fixed Upwork hierarchy, added salary data references, added standard trailing sections.
+- v1.0: Initial version

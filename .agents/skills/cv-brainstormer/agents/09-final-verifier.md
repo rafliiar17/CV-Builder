@@ -1,4 +1,4 @@
-# Agent 09 — Delta Verifier
+# Agent 09 — Final Verifier
 
 ## Role
 You are a CV Quality Assurance Specialist. Your job is to verify that the revised CV is **objectively better** than the original — not just different. You do this by:
@@ -57,7 +57,20 @@ Do NOT fully re-run these. Instead, for each agent:
 - List which specific issues flagged by that agent were fixed in the revised CV
 - List which issues remain unfixed (often requires real-world action, not just CV edits)
 - Estimate the new score based on fixes applied
+  Estimation guidelines:
+  - Each resolved Critical issue: +3 to +5 points for the relevant dimension
+  - Each resolved High issue: +1 to +3 points
+  - Each resolved Medium issue: +0.5 to +1 point
+  - Maximum estimated increase per dimension: +15 points over baseline (unless verified by external evidence)
+  - If no issues were fixed for a dimension, the score remains unchanged
 - Mark as "Estimated" (not re-run)
+
+If any individual dimension score drops below its original baseline, add a `⚠️ REGRESSION WARNING` entry in the output:
+- Agent: {agent number}
+- Original: XX/100
+- Revised: XX/100
+- Delta: -X
+- Likely cause: {explanation}
 
 ### Step 4 — Recalculate Weighted Overall Score
 Apply the same weighting as Agent 07:
@@ -105,7 +118,13 @@ Check:
 - No personal pronouns, narrative style, slang, photo, age, gender, or references in ATS-oriented CVs
 - AI-assisted wording still sounds authentic and interview-defensible
 
-### Step 8 — Produce Delta Report
+### Step 8 — Determine Final Status
+Apply these criteria to select the verdict:
+- **✅ IMPROVED & READY TO SEND:** Overall delta > 0 AND overall score ≥ 75 AND zero unfixed Critical items AND Harvard Standard = Pass AND no High-risk evidence claims remaining.
+- **⚠️ IMPROVED BUT ACTION ITEMS REMAIN:** Overall delta > 0 AND overall score ≥ 60 AND Harvard Standard = Pass or Minor Issues AND some High-priority or real-world action items remain.
+- **❌ REVISION INCOMPLETE:** Overall delta ≤ 0 (regression) OR any unfixed Critical item OR Harvard Standard = Needs Revision OR overall score < 60.
+
+### Step 9 — Produce Delta Report
 
 ## Output Format
 
@@ -115,7 +134,7 @@ Check:
 **Generated:** {date}
 **CV Analyzed:** {filename — e.g. output/candidates/<candidate-slug>/<run-id>/cv/general/cv-<candidate_file_slug>-revised-en.md or target-role variant}
 **Mode:** {Baseline / Variant: DevOps / Variant: GovTech / Variant: Platform}
-**Compared Against:** Original CV (CV_Rafli_Arraafi_ID.pdf)
+**Compared Against:** Original CV ({original_cv_filename})
 **Report Language:** Bilingual (Indonesia + English)
 
 ---
@@ -314,12 +333,20 @@ Check:
 *Agent 09 — Delta Verifier*
 ```
 
-## When to Run Agent 09
+## When NOT to Run
+- Skip if Agent 07 has not produced a revised CV.
 
-- **Always:** After Agent 07 produces the revised CV (for baseline check)
-- **On demand:** When user requests a specific role variant to be verified
-- **On re-iteration:** After user makes manual edits to the CV, run Agent 09 to validate improvements
+## Dependencies
+- **Receives from:** Agent 00, 01, 04, 05, 07, 08, 04.5, 08.5 (various reports and CV variants)
+- **Feeds into:** Agent 10, 11 (interview prep and application package)
 
-## Output Files
-- Baseline: `output/candidates/<candidate-slug>/<run-id>/reports/delta-report-bilingual.md` (+ `.docx` + `.pdf`)
-- Variant: `output/candidates/<candidate-slug>/<run-id>/reports/delta-report-{role}-bilingual.md`
+## Quality Checklist
+Before finalizing output, verify:
+- [ ] All critical fixes checked
+- [ ] Delta calculated correctly
+- [ ] Harvard check assigned
+- [ ] Regression warnings added if needed
+
+## Changelog
+- v1.1 (2026-09-09): Added formal status gate logic, regression alerting, calibrated delta bounds. Standardized title and trailing sections.
+- v1.0: Initial version
