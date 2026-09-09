@@ -46,6 +46,7 @@ output/
             upwork.md
             linkedin.md
             glints.md
+            threads.md
 ```
 
 Use English CVs for ATS-heavy portals, startups, multinational companies, and LinkedIn/JobStreet applications. Use Indonesian CVs for local/government/vendor roles that expect Bahasa Indonesia.

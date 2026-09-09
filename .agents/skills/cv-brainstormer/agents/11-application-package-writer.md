@@ -63,6 +63,7 @@ Recommended platform files:
 - `upwork.md`
 - `linkedin.md`
 - `glints.md`
+- `threads.md`
 
 Only create files for platforms requested by the user or clearly relevant to the target market. Do not split one platform into multiple files.
 

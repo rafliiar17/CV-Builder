@@ -60,6 +60,7 @@ TEMPLATE_MAP = [
     (r"glints", "tech-spec"),
     (r"linkedin", "tech-spec"),
     (r"upwork", "tech-spec"),
+    (r"threads", "tech-spec"),
 ]
 
 

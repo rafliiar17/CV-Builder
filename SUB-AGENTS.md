@@ -215,6 +215,7 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
   - `output/candidates/<candidate-slug>/<run-id>/platform/<target-role>/upwork.md`
   - `output/candidates/<candidate-slug>/<run-id>/platform/<target-role>/linkedin.md`
   - `output/candidates/<candidate-slug>/<run-id>/platform/<target-role>/glints.md`
+  - `output/candidates/<candidate-slug>/<run-id>/platform/<target-role>/threads.md`
 - Render Markdown files to `.docx` and `.pdf` via `scripts/render_outputs.py`.
 
 ## 2. Output Folder Contract
@@ -258,6 +259,7 @@ output/
             upwork.md
             linkedin.md
             glints.md
+            threads.md
 ```
 
 Do not leave root-level CV/report files in `output/`. Never overwrite another candidate's run.
