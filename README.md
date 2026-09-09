@@ -226,7 +226,21 @@ python3 scripts/cli.py render output/candidates/<candidate-slug>/<date>/<role>/c
 
 Verify keyword compliance and layout safety directly from your terminal:
 ```bash
-python3 scripts/cli.py audit output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md
+python3 scripts/cli.py audit output/candidates/<candidate-slug>/<date>/<role>/cv/cv-<candidate_file_slug>-<role>-en.md
+```
+
+### Step 6: Sync to Web Portfolio (Optional)
+
+If you maintain a web portfolio (e.g. `profile-new`), you can automatically sync verified PDF and DOCX files into your portfolio repository and update download metadata:
+```bash
+# Preview sync changes:
+python3 scripts/sync_to_profile.py --dry-run
+
+# Execute sync:
+python3 scripts/sync_to_profile.py
+
+# Execute sync and trigger Cloudflare R2 upload:
+python3 scripts/sync_to_profile.py --upload-r2
 ```
 
 ## Quality Standard
