@@ -58,11 +58,11 @@ def test_sync_files_and_metadata(tmp_path: Path):
         encoding="utf-8",
     )
     (profile_dir / "data" / "en.json").write_text(
-        json.dumps({"hero": {"cvRepository": []}}),
+        json.dumps({"settings": {"cvRepository": []}, "hero": {"cvRepository": []}}),
         encoding="utf-8",
     )
     (profile_dir / "data" / "id.json").write_text(
-        json.dumps({"hero": {"cvRepository": []}}),
+        json.dumps({"settings": {"cvRepository": []}}),
         encoding="utf-8",
     )
 
@@ -88,5 +88,6 @@ def test_sync_files_and_metadata(tmp_path: Path):
     assert "CV-Rafli-Arraafi-Albaasith-EN.pdf" in r2_script
 
     en_json = json.loads((profile_dir / "data" / "en.json").read_text(encoding="utf-8"))
-    assert len(en_json["hero"]["cvRepository"]) == 1
-    assert en_json["hero"]["cvRepository"][0]["category"] == "Application Support"
+    assert len(en_json["settings"]["cvRepository"]) == 1
+    assert en_json["settings"]["cvRepository"][0]["category"] == "Application Support"
+    assert "hero" not in en_json or "cvRepository" not in en_json.get("hero", {})
