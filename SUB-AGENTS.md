@@ -120,7 +120,7 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
 - Negotiation Positioning:
   - Clearly state candidate's realistic ask, stretch ask, minimum walk-away number, and freelance/contract rates (hourly/monthly) to prevent underpricing.
 - Output:
-  - `output/candidates/<candidate-slug>/<run-id>/salary/<target-role>/salary-market-<target-role>.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/salary/salary-market-<target-role>.md`
   - Render to `.docx` and `.pdf` via `scripts/render_outputs.py`.
 
 ### Phase 8 - Synthesis
@@ -130,17 +130,17 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
 - Agent 07 must resolve conflicts and challenge unsupported framing.
 - Agent 07 must include a Harvard-informed quality check covering target tailoring, specific/active/factual language, scanability, evidence-safe claims, and ATS-safe formatting.
 - Output:
-  - `output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.md`
-  - `output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.docx`
-  - `output/candidates/<candidate-slug>/<run-id>/reports/final-report-bilingual.pdf`
+  - `output/candidates/<candidate-slug>/<date>/reports/final-report-bilingual.md`
+  - `output/candidates/<candidate-slug>/<date>/reports/final-report-bilingual.docx`
+  - `output/candidates/<candidate-slug>/<date>/reports/final-report-bilingual.pdf`
 
 ### Phase 9 - Role Tailoring
 
 - Run Agent 08 for each user-approved target role.
 - Current target role folders:
-  - `output/candidates/<candidate-slug>/<run-id>/cv/application-support/`
-  - `output/candidates/<candidate-slug>/<run-id>/cv/data-analyst/`
-  - `output/candidates/<candidate-slug>/<run-id>/cv/general/`
+  - `output/candidates/<candidate-slug>/<date>/application-support/cv/`
+  - `output/candidates/<candidate-slug>/<date>/data-analyst/cv/`
+  - `output/candidates/<candidate-slug>/<date>/general/cv/`
 - For each target role, create both language variants:
   - `*-en.md`
   - `*-id.md`
@@ -184,8 +184,8 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
   - follow-up prep
   - what not to overclaim
 - Output:
-  - `output/candidates/<candidate-slug>/<run-id>/interview/<target-role>/star-<target-role>-en.md`
-  - `output/candidates/<candidate-slug>/<run-id>/interview/<target-role>/star-<target-role>-id.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/interview/star-<target-role>-en.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/interview/star-<target-role>-id.md`
 - Render each Markdown file to `.docx` and `.pdf`.
 
 ### Phase 13 - Application Package & Platform Writer
@@ -204,30 +204,30 @@ This document defines how the main agent should orchestrate the CV Brainstormer 
   - **Application Emails**: 5-8 concise sentences with clear subject line options.
   - **Follow-up Emails**: Polite, direct, low-pressure follow-up template.
   - Generates `-en.md` for global/remote and `-id.md` for local Indonesian markets when requested.
-- Consolidated Platform Files (one single file per platform channel under `platform/<target-role>/`):
+- Consolidated Platform Files (one single file per platform channel under `<target-role>/platform/`):
   - `upwork.md`: Service-positioned (client problems, deliverables, tools, scope, turnaround, proof of work, proposal hooks, and Upwork Service Match score; avoid resume-dump or unverified expert claims).
   - `linkedin.md`: Keyword-aware headline, about section, featured highlights, and outreach messaging.
   - `glints.md`: Regional/local recruiter-friendly summary, practical skills, expected role fit, and application pitch.
 - Outputs:
-  - `output/candidates/<candidate-slug>/<run-id>/application/<target-role>/cover-letter-<target-role>-en.md`
-  - `output/candidates/<candidate-slug>/<run-id>/application/<target-role>/email-application-<target-role>-en.md`
-  - `output/candidates/<candidate-slug>/<run-id>/application/<target-role>/email-follow-up-<target-role>-en.md`
-  - `output/candidates/<candidate-slug>/<run-id>/platform/<target-role>/upwork.md`
-  - `output/candidates/<candidate-slug>/<run-id>/platform/<target-role>/linkedin.md`
-  - `output/candidates/<candidate-slug>/<run-id>/platform/<target-role>/glints.md`
-  - `output/candidates/<candidate-slug>/<run-id>/platform/<target-role>/threads.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/application/cover-letter-<target-role>-en.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/application/email-application-<target-role>-en.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/application/email-follow-up-<target-role>-en.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/platform/upwork.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/platform/linkedin.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/platform/glints.md`
+  - `output/candidates/<candidate-slug>/<date>/<target-role>/platform/threads.md`
 - Render Markdown files to `.docx` and `.pdf` via `scripts/render_outputs.py`.
 
 ## 2. Output Folder Contract
 
-The workflow should keep `output/` organized by candidate and run:
+The workflow should keep `output/` organized by candidate, run date, and position:
 
 ```text
 output/
   candidates/
     <candidate-slug>/
       LATEST.md
-      <run-id>/
+      <date>/
         input/
           original-cv.pdf
           extracted.txt
@@ -236,26 +236,22 @@ output/
         scratch/
         reports/
           final-report-bilingual.*
-        salary/
-          <target-role>/
-            salary-market-<target-role>.*
-        cv/
-          <target-role>/
-            cv-<candidate_file_slug>-<target-role>-en.*
-            cv-<candidate_file_slug>-<target-role>-id.*
         portfolio/
           projects-from-list.*
-        interview/
-          <target-role>/
+        <target-role>/
+          cv/
+            cv-<candidate_file_slug>-<target-role>-en.*
+            cv-<candidate_file_slug>-<target-role>-id.*
+          salary/
+            salary-market-<target-role>.*
+          interview/
             star-<target-role>-en.*
             star-<target-role>-id.*
-        application/
-          <target-role>/
+          application/
             cover-letter-<target-role>-en.*
             email-application-<target-role>-en.*
             email-follow-up-<target-role>-en.*
-        platform/
-          <target-role>/
+          platform/
             upwork.md
             linkedin.md
             glints.md
@@ -370,7 +366,7 @@ Agents responsible for CV writing must:
 scripts/review-cv "Candidate Name" /path/to/cv.pdf --roles "Data Analyst, Application Support" --projects /path/to/projects-list.md
 ```
 
-This creates `output/candidates/<candidate-slug>/<run-id>/`, copies input files, writes `target-brief.md`, updates `LATEST.md`, and prints the short prompt to start the agent workflow.
+This creates `output/candidates/<candidate-slug>/<date>/`, copies input files, writes `target-brief.md`, updates `LATEST.md`, and prints the short prompt to start the agent workflow.
 
 - Use `scripts/render_outputs.py` to render Markdown into DOCX/PDF:
 
@@ -381,15 +377,15 @@ python scripts/render_outputs.py path/to/file.md
 - For multiple files:
 
 ```bash
-python scripts/render_outputs.py output/candidates/rafli-arraafi/2026-06-01-data-analyst-application-support/cv/data-analyst/cv-rafli_arraafi-data-analyst-en.md output/candidates/rafli-arraafi/2026-06-01-data-analyst-application-support/cv/data-analyst/cv-rafli_arraafi-data-analyst-id.md
+python scripts/render_outputs.py output/candidates/rafli-arraafi/2026-09-09/data-analyst/cv/cv-rafli_arraafi-data-analyst-en.md output/candidates/rafli-arraafi/2026-09-09/data-analyst/cv/cv-rafli_arraafi-data-analyst-id.md
 ```
 
 - STAR interview, salary reports, and application packages should also be rendered to DOCX/PDF:
 
 ```bash
-python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/interview/application-support/star-application-support-en.md
-python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/salary/application-support/salary-market-application-support.md
-python scripts/render_outputs.py output/candidates/<candidate-slug>/<run-id>/application/application-support/cover-letter-application-support-en.md
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<date>/<role>/interview/star-<role>-en.md
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<date>/<role>/salary/salary-market-<role>.md
+python scripts/render_outputs.py output/candidates/<candidate-slug>/<date>/<role>/application/cover-letter-<role>-en.md
 ```
 
 ## 8. Failure Handling

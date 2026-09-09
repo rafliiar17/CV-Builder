@@ -89,11 +89,20 @@ fi
 
 candidate_slug="$(slugify "$candidate_name")"
 candidate_file_slug="$(file_slugify "$candidate_name")"
-target_slug="$(slugify "$roles")"
-run_id="${run_date}-${target_slug}"
+run_id="${run_date}"
 run_dir="output/candidates/${candidate_slug}/${run_id}"
 
-mkdir -p "${run_dir}/input" "${run_dir}/scratch" "${run_dir}/reports" "${run_dir}/salary" "${run_dir}/cv" "${run_dir}/portfolio" "${run_dir}/interview" "${run_dir}/application" "${run_dir}/platform"
+mkdir -p "${run_dir}/input" "${run_dir}/scratch" "${run_dir}/reports" "${run_dir}/portfolio"
+
+# Create per-position subdirectories: [Date]/[Position]/{cv,salary,interview,application,platform}
+IFS=',' read -ra ADDR <<< "$roles"
+for role_raw in "${ADDR[@]}"; do
+  r_trimmed="$(echo "$role_raw" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  if [[ -n "$r_trimmed" ]]; then
+    r_slug="$(slugify "$r_trimmed")"
+    mkdir -p "${run_dir}/${r_slug}/cv" "${run_dir}/${r_slug}/salary" "${run_dir}/${r_slug}/interview" "${run_dir}/${r_slug}/application" "${run_dir}/${r_slug}/platform"
+  fi
+done
 
 cv_ext="${cv_file##*.}"
 cp "$cv_file" "${run_dir}/input/original-cv.${cv_ext}"
@@ -119,10 +128,10 @@ Output strategy:
 - Create role-specific CV variants.
 - Create English and Indonesian CV variants unless the target decision gate says otherwise.
 - Name CV files as \`cv-${candidate_file_slug}-<target-role>-en.md\` and \`cv-${candidate_file_slug}-<target-role>-id.md\`.
-- Research current salary benchmarks in \`salary/<target-role>/\`.
-- Prepare STAR interview stories in \`interview/<target-role>/\`.
-- Create cover letter and email outreach in \`application/<target-role>/\`.
-- Create platform-specific packages in \`platform/<target-role>/\` (Upwork, LinkedIn, Glints).
+- Research current salary benchmarks in \`<target-role>/salary/\`.
+- Prepare STAR interview stories in \`<target-role>/interview/\`.
+- Create cover letter and email outreach in \`<target-role>/application/\`.
+- Create platform-specific packages in \`<target-role>/platform/\` (Upwork, LinkedIn, Glints).
 - Keep all outputs inside this run folder.
 
 Run folder:
@@ -218,12 +227,13 @@ Agent 00 Extractor, Agent 00.25 Role Discovery Interviewer, Agent 00.5 Target De
 Gunakan Harvard resume checklist untuk memastikan CV tailored, spesifik, aktif, faktual, mudah discan, formatnya aman ATS, dan tidak overclaim. Agent 09 wajib menyertakan Harvard Resume Standard Check dengan status Pass, Minor Issues, atau Needs Revision.
 
 Pastikan struktur output per target role tersimpan lengkap di subfolder:
-- salary/<target-role>/salary-market-<target-role>.*
-- cv/<target-role>/cv-${candidate_file_slug}-<target-role>-en.* dan *-id.*
+- reports/final-report-bilingual.*
 - portfolio/projects-from-list.*
-- interview/<target-role>/star-<target-role>-en.* dan *-id.*
-- application/<target-role>/cover-letter-*, email-application-*, email-follow-up-*
-- platform/<target-role>/upwork.md, linkedin.md, glints.md
+- <target-role>/cv/cv-${candidate_file_slug}-<target-role>-en.* dan *-id.*
+- <target-role>/salary/salary-market-<target-role>.*
+- <target-role>/interview/star-<target-role>-en.* dan *-id.*
+- <target-role>/application/cover-letter-*, email-application-*, email-follow-up-*
+- <target-role>/platform/upwork.md, linkedin.md, glints.md
 
 Output wajib masuk ke:
 ${run_dir}

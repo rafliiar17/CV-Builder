@@ -58,26 +58,29 @@ def cmd_init(args: argparse.Namespace) -> int:
     run_date = args.date or datetime.date.today().isoformat()
     candidate_slug = slugify(candidate_name)
     candidate_file_slug = file_slugify(candidate_name)
-    target_slug = slugify(args.roles)
-    run_id = f"{run_date}-{target_slug}"
+    run_id = run_date
 
     base_candidate_dir = REPO_ROOT / "output" / "candidates" / candidate_slug
-    run_dir = base_candidate_dir / run_id
+    run_dir = base_candidate_dir / run_date
 
-    # Create subdirectories matching architecture contract
-    subdirs = [
+    # Create shared subdirectories at date level
+    shared_subdirs = [
         "input",
         "scratch",
         "reports",
-        "salary",
-        "cv",
         "portfolio",
-        "interview",
-        "application",
-        "platform",
     ]
-    for sub in subdirs:
+    for sub in shared_subdirs:
         (run_dir / sub).mkdir(parents=True, exist_ok=True)
+
+    # Create per-position subdirectories: [Date]/[Position]/{cv,salary,interview,application,platform}
+    raw_roles = [r.strip() for r in args.roles.split(",") if r.strip()]
+    role_subdirs = ["cv", "salary", "interview", "application", "platform"]
+    for role_name in raw_roles:
+        role_slug = slugify(role_name)
+        role_dir = run_dir / role_slug
+        for sub in role_subdirs:
+            (role_dir / sub).mkdir(parents=True, exist_ok=True)
 
     # Copy CV file
     cv_ext = cv_file.suffix
@@ -134,10 +137,14 @@ def cmd_init(args: argparse.Namespace) -> int:
 
     # Update LATEST.md
     latest_content = f"""# Latest Run
-- **Run ID**: {run_id}
-- **Directory**: {run_dir}
-- **Roles**: {args.roles}
-- **Updated At**: {datetime.datetime.now().isoformat()}
+
+Current latest run:
+
+`{run_id}`
+
+Run folder:
+
+`output/candidates/{candidate_slug}/{run_id}`
 """
     (base_candidate_dir / "LATEST.md").write_text(latest_content, encoding="utf-8")
 
