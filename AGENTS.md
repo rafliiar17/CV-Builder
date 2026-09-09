@@ -14,7 +14,7 @@ output/
   candidates/
     <candidate-slug>/
       LATEST.md
-      <run-id>/
+      <date>/
         input/
           original-cv.pdf
           extracted.txt
@@ -23,26 +23,22 @@ output/
         scratch/
         reports/
           final-report-bilingual.*
-        salary/
-          <target-role>/
-            salary-market-<target-role>.*
-        cv/
-          <target-role>/
-            cv-<candidate_file_slug>-<target-role>-en.*
-            cv-<candidate_file_slug>-<target-role>-id.*
         portfolio/
           projects-from-list.*
-        interview/
-          <target-role>/
+        <target-role>/
+          cv/
+            cv-<candidate_file_slug>-<target-role>-en.*
+            cv-<candidate_file_slug>-<target-role>-id.*
+          salary/
+            salary-market-<target-role>.*
+          interview/
             star-<target-role>-en.*
             star-<target-role>-id.*
-        application/
-          <target-role>/
+          application/
             cover-letter-<target-role>-en.*
             email-application-<target-role>-en.*
             email-follow-up-<target-role>-en.*
-        platform/
-          <target-role>/
+          platform/
             upwork.md
             linkedin.md
             glints.md
@@ -55,7 +51,7 @@ For CV filenames, use a candidate file slug with underscores derived from the ca
 
 Current example run:
 
-`output/candidates/rafli-arraafi/2026-06-01-data-analyst-application-support/`
+`output/candidates/rafli-arraafi/2026-09-09/`
 
 ## Specialist Roster
 

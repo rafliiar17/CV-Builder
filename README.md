@@ -135,21 +135,22 @@ python3 scripts/cli.py init "Your Full Name" /path/to/your-cv.pdf --roles "Targe
 *(Or use the shell helper: `scripts/review-cv "Your Full Name" /path/to/your-cv.pdf --roles "Target Role 1, Target Role 2"`)*
 
 This automated command:
-1. Creates an isolated candidate directory: `output/candidates/<candidate-slug>/<run-id>/`.
+1. Creates an isolated candidate directory: `output/candidates/<candidate-slug>/<date>/`.
 2. Extracts plain text and links from your PDF/DOCX into `input/extracted.txt`.
 3. Prepares `input/target-brief.md` with your chosen target roles and market strategy.
 4. Sets up `input/projects-list.md` to link project portfolio evidence.
-5. Updates `LATEST.md` to point to this newest run.
+5. Sets up per-position folders `<target-role>/` with `cv/`, `salary/`, `interview/`, `application/`, and `platform/`.
+6. Updates `LATEST.md` to point to this newest run.
 
 #### Option B — Building from Scratch (No Existing CV)
 If you don't have an existing CV file:
 1. Create your candidate folder manually:
    ```bash
-   mkdir -p output/candidates/your-name/$(date +%Y-%m-%d)-target-role/input
+   mkdir -p output/candidates/your-name/$(date +%Y-%m-%d)/input
    ```
 2. Copy the standardized input template:
    ```bash
-   cp templates/cv-input-form.md output/candidates/your-name/$(date +%Y-%m-%d)-target-role/input/extracted.txt
+   cp templates/cv-input-form.md output/candidates/your-name/$(date +%Y-%m-%d)/input/extracted.txt
    ```
 3. Open `extracted.txt` and fill in your education, work history, tech skills, and projects.
 4. Create `input/target-brief.md` specifying your target roles (e.g. `Data Analyst, Application Support`).
@@ -162,7 +163,7 @@ CV Brainstormer uses an 18-agent roster defined under `.agents/skills/cv-brainst
 
 #### 🤖 Method 1: AI Coding Assistant (Antigravity, Claude Code, Cursor, Codex) — Recommended
 Open this repository in your AI agent and prompt it:
-> *"Run the CV-Brainstormer workflow for candidate directory `output/candidates/<candidate-slug>/<run-id>/` targeting the role `[Target Role]`. Execute Agent 00 through Agent 11, enforcing the Evidence Gate (04.5), Harvard Resume Standard (09), and Anti-Slop writing rules (`no-ai-slop`)."*
+> *"Run the CV-Brainstormer workflow for candidate directory `output/candidates/<candidate-slug>/<date>/` targeting the role `[Target Role]`. Execute Agent 00 through Agent 11, enforcing the Evidence Gate (04.5), Harvard Resume Standard (09), and Anti-Slop writing rules (`no-ai-slop`)."*
 
 The agent will read `.agents/skills/cv-brainstormer/SKILL.md` and orchestrate the full pipeline:
 - **Phase 1 (Diagnosis & Target Gate)**: Agents 00, 00.25, and 00.5 normalize text, diagnose true role level, and lock targets.
@@ -174,7 +175,7 @@ The agent will read `.agents/skills/cv-brainstormer/SKILL.md` and orchestrate th
 #### 💻 Method 2: Terminal Scripting (Claude Code CLI)
 You can pipe commands directly via Claude Code in terminal:
 ```bash
-RUN_DIR="output/candidates/<candidate-slug>/<run-id>"
+RUN_DIR="output/candidates/<candidate-slug>/<date>"
 AGENTS_DIR=".agents/skills/cv-brainstormer/agents"
 
 # Step 00: Extract & Normalize
@@ -192,15 +193,16 @@ claude -p "$(cat ${AGENTS_DIR}/00-extractor.md)" < "${RUN_DIR}/input/extracted.t
 
 ### Step 3: Review Your Deliverables
 
-Once the pipeline completes, your results are saved in `output/candidates/<candidate-slug>/<run-id>/`:
+Once the pipeline completes, your results are saved in `output/candidates/<candidate-slug>/<date>/`:
 - 📊 **`reports/final-report-bilingual.md`**: Full diagnostic review, ATS score breakdown, and recruiter impressions (ID + EN).
-- 📄 **`cv/<target-role>/`**:
-  - `cv-<candidate_file_slug>-<target-role>-en.md` (English CV for global/multinational/remote jobs).
-  - `cv-<candidate_file_slug>-<target-role>-id.md` (Indonesian CV for local companies/government/vendors).
-- 💰 **`salary/<target-role>/salary-market-<target-role>.md`**: Real-time salary benchmark with live citations converted to SGD, USD, and IDR.
-- 🎯 **`interview/<target-role>/star-<target-role>-en.md`**: Role-specific STAR interview answers with strict boundaries against overclaiming.
-- ✉️ **`application/<target-role>/`**: Tailored cover letter, application email, and follow-up email.
-- 🌐 **`platform/<target-role>/`**: Platform-optimized profiles and proposals for LinkedIn, Upwork, and Glints.
+- 📁 **`<target-role>/`**:
+  - 📄 **`cv/`**:
+    - `cv-<candidate_file_slug>-<target-role>-en.md` (English CV for global/multinational/remote jobs).
+    - `cv-<candidate_file_slug>-<target-role>-id.md` (Indonesian CV for local companies/government/vendors).
+  - 💰 **`salary/salary-market-<target-role>.md`**: Real-time salary benchmark with mathematical calculation breakdown converted to SGD, USD, and IDR.
+  - 🎯 **`interview/star-<target-role>-en.md`**: Role-specific STAR interview answers with strict boundaries against overclaiming.
+  - ✉️ **`application/`**: Tailored cover letter, application email, and follow-up email.
+  - 🌐 **`platform/`**: Platform-optimized profiles and proposals for LinkedIn, Upwork, and Glints.
 
 > [!IMPORTANT]
 > **Check the Harvard Gate in `reports/delta-report-bilingual.md`**:
@@ -214,10 +216,10 @@ Convert the verified Markdown documents into beautifully styled, ATS-safe PDF an
 
 ```bash
 # Compile all generated files in the candidate run folder:
-python3 scripts/cli.py render output/candidates/<candidate-slug>/<run-id>/
+python3 scripts/cli.py render output/candidates/<candidate-slug>/<date>/
 
 # Or compile an individual CV:
-python3 scripts/cli.py render output/candidates/<candidate-slug>/<run-id>/cv/<role>/cv-<candidate_file_slug>-<role>-en.md
+python3 scripts/cli.py render output/candidates/<candidate-slug>/<date>/<role>/cv/cv-<candidate_file_slug>-<role>-en.md
 ```
 
 ### Step 5: Run Final ATS Audit

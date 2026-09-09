@@ -87,7 +87,6 @@ def test_review_cv_run_initialization(tmp_path: Path):
     candidate_slug = "jane-test-candidate"
     run_date = "2026-09-09"
     roles = "Data Analyst, Application Support"
-    expected_run_id = f"{run_date}-data-analyst-application-support"
     candidate_dir = REPO_ROOT / "output" / "candidates" / candidate_slug
 
     try:
@@ -106,25 +105,23 @@ def test_review_cv_run_initialization(tmp_path: Path):
         assert res.returncode == 0, f"Script failed with stderr: {res.stderr}"
 
         # Check run directory
-        run_dir = candidate_dir / expected_run_id
+        run_dir = candidate_dir / run_date
         assert run_dir.exists()
         assert run_dir.is_dir()
 
-        # Check required subdirectories
-        for subdir in [
-            "input",
-            "scratch",
-            "reports",
-            "salary",
-            "cv",
-            "portfolio",
-            "interview",
-            "application",
-            "platform",
-        ]:
+        # Check required shared subdirectories at date level
+        for subdir in ["input", "scratch", "reports", "portfolio"]:
             sub_path = run_dir / subdir
             assert sub_path.exists(), f"Subdirectory missing: {subdir}"
             assert sub_path.is_dir()
+
+        # Check required per-position subdirectories: [Date]/[Position]/{cv,salary,interview,application,platform}
+        for role_slug in ["data-analyst", "application-support"]:
+            role_path = run_dir / role_slug
+            assert role_path.exists(), f"Role directory missing: {role_slug}"
+            for cat in ["cv", "salary", "interview", "application", "platform"]:
+                cat_path = role_path / cat
+                assert cat_path.exists(), f"Category {cat} missing in {role_slug}"
 
         # Check input files copied / created
         assert (run_dir / "input" / "original-cv.pdf").exists()
@@ -141,7 +138,7 @@ def test_review_cv_run_initialization(tmp_path: Path):
         # Check LATEST.md
         latest_file = candidate_dir / "LATEST.md"
         assert latest_file.exists()
-        assert expected_run_id in latest_file.read_text(encoding="utf-8")
+        assert run_date in latest_file.read_text(encoding="utf-8")
 
     finally:
         # Clean up test output directory

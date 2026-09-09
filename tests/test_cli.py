@@ -41,7 +41,6 @@ def test_cli_init_run(tmp_path: Path):
     candidate_slug = "alex-test"
     run_date = "2026-09-09"
     roles = "DevOps Engineer"
-    expected_run_id = f"{run_date}-devops-engineer"
     candidate_dir = REPO_ROOT / "output" / "candidates" / candidate_slug
 
     try:
@@ -60,12 +59,15 @@ def test_cli_init_run(tmp_path: Path):
         assert res.returncode == 0
         assert "Successfully initialized run directory" in res.stdout
 
-        run_dir = candidate_dir / expected_run_id
+        run_dir = candidate_dir / run_date
         assert run_dir.exists()
         assert (run_dir / "input" / "extracted.txt").exists()
         assert (run_dir / "input" / "target-brief.md").exists()
         assert (run_dir / "input" / "harvard-resume-checklist.md").exists()
+        assert (run_dir / "devops-engineer" / "cv").exists()
+        assert (run_dir / "devops-engineer" / "salary").exists()
         assert (candidate_dir / "LATEST.md").exists()
+        assert run_date in (candidate_dir / "LATEST.md").read_text(encoding="utf-8")
     finally:
         if candidate_dir.exists():
             shutil.rmtree(candidate_dir, ignore_errors=True)
