@@ -33,8 +33,17 @@ The package must feel written by a real candidate, not a template. It must be sp
 - Glints copy should be local/regional recruiter-friendly: clear role target, concise profile summary, practical skills, expected role fit, and Bahasa/English variants if useful.
 - Do not call the candidate an "expert", "top-rated", "senior", or "certified" freelancer unless evidence supports it.
 - If the candidate is new to Upwork, write as a credible practitioner entering the marketplace, not as an established Upwork freelancer.
-- Analyze which platform gives the candidate the best chance of getting jobs based on evidence, target role, proof of work, communication style, and market fit.
 - When application emails or proposals require salary expectations, reference Agent 05.75's 'realistic ask' and 'do-not-undersell' thresholds. If Agent 05.75 was not run, use placeholders: '[Salary expectation: See salary market analysis or discuss in interview]'.
+- **Two-Stage Content Pipeline (`writing-shape` → `no-ai-slop`)**:
+  - **Stage 1 (Shape)**: Structure content paragraph-by-paragraph with grounded concepts and deliberate format choices (prose vs. list vs. table). Never jump into jargon before grounding.
+  - **Stage 2 (Anti-Slop Cleanse)**: Strictly enforce the Peter Yang `no-ai-slop` standard (`.agents/skills/no-ai-slop/SKILL.md`).
+  - **Banned Buzzwords**: Never use *delve, foster, leverage, utilize, facilitate, empower, streamline, robust, cutting-edge, paradigm shift, game changer, tapestry, realm, beacon, multifaceted, meticulous, intricate, paramount, transformative, elevate, embark, supercharge, harness, ever-evolving*.
+  - **Banned Patterns**:
+    - No binary contrasts (*"Rather than X, I focus on Y"* or *"It's not X. It's Y."*). State the action directly.
+    - No throat-clearing openers (*"I am writing to express my strong interest..."* or *"Here's the thing..."*). Lead immediately with problem, scope, and metric.
+    - No faux-insight setups (*"What nobody tells you..."*, *"Here is why..."*).
+    - No superficial importance puffery (*"stands as a testament"*, *"plays a vital role"*, *"bridging technical gaps"* without concrete mechanics).
+    - No decorative formatting slop (emoji in headers, decorative bold, unnecessary bullet fragmentation).
 
 ## Output Location
 
@@ -397,14 +406,17 @@ Before finalizing, verify:
 - Upwork Service Match is shown separately from CV/job role match.
 - Each platform is contained in a single file, not split into multiple files.
 - Each platform file explains whether that platform is a high, medium, or low opportunity channel for this candidate.
+- **Anti-Slop Cleanse Complete**: Zero banned words (*leverage, robust, streamline, utilize, facilitate, empower, meticulous, intricate*), zero binary contrasts, and zero throat-clearing openers.
 
 ## When NOT to Run
 - Skip if no verified CV exists from Agent 09.
 
 ## Dependencies
 - **Receives from:** Agent 08, 09, 00.5, 04.5, 05, 08.5, 10
+- **Editorial Skills:** `writing-shape` (paragraph structuring & grounding), `no-ai-slop` (anti-slop quality gate)
 - **Feeds into:** Final output for candidate
 
 ## Changelog
+- v1.2 (2026-09-09): Integrated strict `writing-shape` → `no-ai-slop` two-stage pipeline, banned buzzwords list, binary contrast restrictions, and editorial checklist.
 - v1.1 (2026-09-09): Added Platform Opportunity scoring rubric, removed deprecated platforms, fixed Upwork hierarchy, added salary data references, added standard trailing sections.
 - v1.0: Initial version

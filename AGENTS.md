@@ -1,6 +1,6 @@
 # AGENTS.md - Specialist Agents Reference
 
-This project utilizes a multi-agent CV workflow with core agents (00-11) plus strategic gate agents (00.25, 00.5, 04.5, 05.75, 08.5) to prevent generic, overclaimed, underpriced, or role-misaligned CVs.
+This project runs a multi-agent CV workflow with core agents (00-11) plus strategic gate agents (00.25, 00.5, 04.5, 05.75, 08.5) to prevent generic, overclaimed, underpriced, or role-misaligned CVs.
 
 ## Main Orchestrator (You)
 You are the master agent. Your job is to extract the input, orchestrate the specialists below, tailor outputs to the user's target roles, and render final documents in a manageable folder structure.

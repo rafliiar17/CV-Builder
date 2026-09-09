@@ -19,6 +19,11 @@ dependencies = [
     "pdfplumber>=0.11.0",
 ]
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scripts*"]
+exclude = ["input*", "output*", "templates*", "tests*", ".agents*"]
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
