@@ -74,11 +74,11 @@ Current example run:
 | **05.75** | **Salary Market Analyst** | Deep-reviews current salary ranges for the target role/market, cites reliable fresh sources, converts ranges to SGD, USD, and IDR, and states negotiation positioning. |
 | **06** | **Bias Checker** | Scans for unnecessary personal info (age, religion, photo) and inclusive language. |
 | **07** | **Synthesizer / Human CV Writer** | Compiles reports, resolves conflicts, and writes a human, role-aware, evidence-safe baseline CV. |
-| **08** | **Role Tailor / Copywriter** | Tailors the baseline CV to specific target roles with natural human copywriting and interview-defensible wording. |
+| **08** | **Role Tailor / Copywriter** | Tailors the baseline CV to specific target roles with natural human copywriting, interview-defensible wording, and anti-slop principles. |
 | **08.5** | **Portfolio Mapper** | Maps real projects to target roles and identifies portfolio gaps, screenshots, READMEs, demos, or SQL proof needed. |
 | **09** | **Final Verifier** | Re-runs ATS + achievement scoring and checks role fit, evidence risk, interview defensibility, portfolio completeness, and output structure. |
 | **10** | **STAR Interview Coach** | Converts verified CV claims, metrics, and evidence into role-specific STAR interview story banks. |
-| **11** | **Application Package Writer** | Creates short, role/company-aware cover letters, application emails, and one consolidated platform file per channel such as Upwork, LinkedIn, and Glints. |
+| **11** | **Application Package Writer** | Creates short, role/company-aware cover letters, application emails, and consolidated platform content (LinkedIn, Upwork, Glints) using structured writing and anti-slop guidelines. |
 
 ## Critical Standards
 
@@ -99,6 +99,21 @@ Current example run:
 - Agent 11 must not invent company research. If no company/JD context is provided, generate reusable but non-generic drafts with placeholders and clear customization notes.
 - Platform outputs must be consolidated into one file per platform, for example `upwork.md`, `linkedin.md`, and `glints.md`. Each platform file must include opportunity analysis, recommended positioning, profile copy, and platform-specific application/proposal content.
 - Upwork outputs must be service-positioned, not CV-positioned: focus on client problems, deliverables, proof, scope, turnaround, and proposal hooks. Do not use inflated expert claims unless evidence supports them.
+- **Anti-Slop Quality Gate (`no-ai-slop`)**: All platform copy (LinkedIn posts, profile intros, Threads), cover letters, and email outreach must pass the Peter Yang `no-ai-slop` standard (`.agents/skills/no-ai-slop/SKILL.md`). Strip banned buzzwords (*delve, foster, leverage, robust, cutting-edge, paradigm shift, tapestry, supercharge*), faux-insight openers (*"Here's the thing..."*, *"What nobody tells you..."*), binary contrasts (*"It's not X. It's Y."*), and decorative emoji/bold formatting.
+- **Proper Content Writing Pipeline (Matt Pocock)**: For thought-leadership posts, case studies, and long-form portfolio stories, use the two-stage writing pipeline:
+  1. `writing-fragments` (Explore): Interview and mine raw personal insights, unfiltered opinions, and real project vignettes without imposing early structure.
+  2. `writing-shape` / `writing-beats` (Exploit): Structure the draft paragraph-by-paragraph with grounded concepts, deliberate format choices (prose vs. list vs. table), and zero filler before final anti-slop verification.
+
+## Content Creation & Writing Skills
+
+The repository includes localized writing skills under `.agents/skills/` to guarantee authentic, high-impact copy for candidate content and applications:
+
+| Skill | Author | Path | Purpose |
+|---|---|---|---|
+| **`no-ai-slop`** | Peter Yang | `.agents/skills/no-ai-slop/` | Removes 20+ AI slop patterns, buzzwords, and robotic cadence while preserving author voice. |
+| **`writing-fragments`** | Matt Pocock | `.agents/skills/writing-fragments/` | Explore phase: Mines raw observations, punchy lines, and vignettes via intensive interviewing. |
+| **`writing-shape`** | Matt Pocock | `.agents/skills/writing-shape/` | Exploit phase: Shapes raw material into disciplined articles/posts paragraph-by-paragraph. |
+| **`writing-beats`** | Matt Pocock | `.agents/skills/writing-beats/` | Exploit variant: Assembles content into a narrative journey of beats with progressive grounding. |
 
 ## Instructions Location
 The specific prompts and detailed rubrics for each agent are stored in `.agents/skills/cv-brainstormer/agents/`. Do not duplicate them here.
