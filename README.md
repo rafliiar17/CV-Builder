@@ -1,5 +1,10 @@
 # CV Brainstormer
 
+[![CI](https://github.com/rafliiar17/CV-Builder/actions/workflows/ci.yml/badge.svg)](https://github.com/rafliiar17/CV-Builder/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python: 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 CV Brainstormer is an open-source, multi-agent workflow for reviewing, improving, and generating professional CVs. It is designed for candidates who need role-specific, ATS-friendly, and interview-defensible CV outputs in English and Indonesian.
 
 The project turns a raw CV and target-role brief into structured analysis, market salary intelligence, tailored CV variants, portfolio mapping, STAR interview preparation, and global job application packages. It is especially useful when a candidate's job title, actual work, target role, and available evidence do not line up cleanly.
@@ -82,6 +87,38 @@ output/
 
 Generated candidate inputs and outputs are ignored by Git by default.
 
+## Installation & Prerequisites
+
+### 1. System Dependencies
+PDF rendering requires WeasyPrint's underlying graphical libraries:
+- **Ubuntu / Debian**:
+  ```bash
+  sudo apt-get update && sudo apt-get install -y libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libjpeg-dev libopenjp2-7-dev
+  ```
+- **Arch Linux / CachyOS**:
+  ```bash
+  sudo pacman -S pango harfbuzz cairo libjpeg-turbo openjpeg2
+  ```
+- **macOS**:
+  ```bash
+  brew install pango harfbuzz cairo libjpeg openjpeg
+  ```
+
+### 2. Python Environment
+```bash
+# Clone the repository
+git clone https://github.com/rafliiar17/CV-Builder.git
+cd CV-Builder
+
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+pip install -e .
+```
+
 ## Quick Start
 
 ### 1. Initialize a review run
@@ -121,6 +158,15 @@ CV Brainstormer uses a Harvard-inspired resume quality layer as a light gate. Th
 
 The standard checks whether the CV is tailored, specific, active, factual, scan-friendly, ATS-safe, and free from unsupported overclaims.
 
+## Contributing
+
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, development setup, test execution, and pull request process.
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
 ## Repository Status
 
 This repository is maintained as a practical workflow project, not a packaged library. Before applying to Codex for Open Source, make sure the GitHub repository is public and add accurate adoption signals if available, such as stars, forks, issues, external users, or real usage examples.
+
