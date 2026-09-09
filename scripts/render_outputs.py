@@ -11,6 +11,7 @@ from docx import Document
 from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 from docx.shared import Inches, Pt, RGBColor
+from docx.text.paragraph import Paragraph
 from weasyprint import HTML
 
 CSS = """
@@ -54,8 +55,13 @@ def strip_md(text: str) -> str:
     return text.strip()
 
 
+def sanitize_xml(text: str) -> str:
+    """Remove control characters forbidden in XML 1.0 (keeping tab, newline, carriage return)."""
+    return re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F]", "", text)
+
+
 def add_formatted_runs(
-    para,
+    para: Paragraph,
     text: str,
     default_bold: bool = False,
     default_italic: bool = False,
@@ -64,6 +70,7 @@ def add_formatted_runs(
     if not text:
         return
 
+    text = sanitize_xml(text)
     parts = INLINE_MD_RE.split(text)
     for part in parts:
         if not part:
